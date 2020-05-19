@@ -90,8 +90,8 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 ## Liste des utilisateurs (rôles) appelés à modifier et consulter les données
 
-**Membre du SAV** :
-**Membre du service vente** 
+-Membre du SAV 
+-Membre du service vente
 
 ## Liste des fonctions que ces utilisateurs pourront effectuer
 - C'est le service vente qui réalise les factures
