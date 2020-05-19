@@ -49,7 +49,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - propose un ensemble de produits (ainsi plusieurs fournisseurs peuvent proposer le même produit), 
 
 **Action**
--donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet
+- donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet
 
 **Facture**
 - réalisée par un membre du service vente
