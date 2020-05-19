@@ -1,0 +1,68 @@
+@startuml
+title UML Entreprise de vente
+
+class Produit {
+  numeroDeSerie : integer {key}
+  prixAffiche : float
+  reference : string
+  prixReference : float
+  description : string
+  consommation : date
+  categorie: string
+  sousCategorie: string
+  extensionGarantie : boolean
+}
+
+class Fournisseur {
+	nom : string {key}
+}
+
+Fournisseur "1" -- "*" Produit : fourni >
+
+
+class Facture {
+  numeroFacture : integer {key}
+  total : float 
+  nomClient : string
+}
+
+Facture "1" -- "*" Produit : contient >
+
+class Personnel {
+  idPersonnel: integer {key}
+  service : string
+}
+
+
+Personnel "1" -- "*" Facture : réalise >
+Personnel "1" -- "*" TicketPriseEnCharge : crée >
+Personnel "1" -- "*" BonDeCommande : crée >
+
+class TicketPriseEnCharge {
+  numeroSerieDuProduit : integer {key}
+  date : string 
+}
+
+class BonDeCommande {
+  referenceProduit : integer {key}
+  quantite : integer
+}
+
+
+Achat "1" -- "1" BonDeCommande : concerne 
+
+class Achat {
+  prixUnitaire : float
+  quantite : integer
+}
+
+
+
+class Reparation  {
+  tempsPassé : float {key}
+  materielUtilisé : string
+}
+
+Reparation "1" -- "1" TicketPriseEnCharge : concerne >
+
+@enduml
