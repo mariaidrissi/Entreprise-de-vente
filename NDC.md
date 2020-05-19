@@ -118,3 +118,4 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Les clients peuvent être des particuliers ou des professionnels ;
 - Chaque produit vendu peut être un appareil, mais aussi une pièce détaché (le SAV se sert d'ailleurs des pièces détachés pour effectuer les réparations) ;
 - Pour chaque produit (appareil, accessoire, pièce détachée, etc.), il faut établir des relations de compatibilités avec les autres
+- Chaque achat est associé à un bon de commande
