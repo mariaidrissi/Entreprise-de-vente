@@ -7,18 +7,18 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 ## Liste des objets nécessaires à la modélisation
 
-**Produit**
-**Fournisseur**
-**Action**
-**Facture**
-**Reéparation** 
-**Vente**
-**Reprise d'objet**
-**Client**
-**SAV**
-**Ticket de prise en charge**
-**Bon de commande**
-**Achat**
+*Produit
+*Fournisseur
+*Action
+*Facture
+*Reéparation
+*Vente
+*Reprise d'objet
+*Client
+*SAV
+*Ticket de prise en charge
+*Bon de commande
+*Achat
 
 ## Liste des propriétés associées à chaque objet
 
