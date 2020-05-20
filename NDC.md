@@ -7,29 +7,17 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 ## Liste des objets nécessaires à la modélisation
 
-**Produit**
-
-**Fournisseur**
-
-**Action**
-
-**Facture**
-
-**Reéparation**
-
-**Vente**
-
-**Reprise d'objet**
-
-**Client**
-
-**SAV**
-
-**Ticket de prise en charge**
-
-**Bon de commande**
-
-**Achat**
+* Produit
+* Fournisseur
+* Facture
+* Réparation
+* Vente
+* Reprise d'objet 
+* Client
+* SAV 
+* Ticket de prise en charge
+* Bon de commande
+* Achat
 
 ## Liste des propriétés associées à chaque objet
 
@@ -47,9 +35,6 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 **Fournisseur**
 - propose un ensemble de produits (ainsi plusieurs fournisseurs peuvent proposer le même produit), 
-
-**Action**
-- donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet
 
 **Facture**
 - réalisée par un membre du service vente
@@ -70,7 +55,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - prix unitaire
 
 
-**Reéparation** 
+**Réparation** 
 - le temps passé  
 - le matériel utilisé
 
@@ -96,6 +81,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - La facturation est toujours réalisée par un membre du service vente
 - Lors d'une vente, il faut préciser si l'installation doit être effectué par un spécialiste (auquel cas un supplément sera à régler)
 - Sur chaque facture, il peut y avoir des remises différentes appliquées sur chaque produit acheté
+- Le SAV est géré par un membre du service SAV : il crée le ticket de prise en charge et note la date (pour contrôler la garantie du produit)
 - Le SAV choisi de prendre en charge ou non la réparation, ou si c'est irréparable, de rendre le produit au client ou de proposer une remise sur un achat suite à la reprise du produit défectueux ;
 
 
@@ -108,6 +94,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - C'est le service vente qui réalise les factures
 - C'est le service  vente qui emmet les bons de commandes
 - C'est le service achat qui valide un achat suite au bon de commande avec une quantité de produits et le prix unitaire final
+- -C'est le service après vente qui crée le ticket de prise en charge
 - Pouvoir retrouver différentes statistiques, comme par exemple les produits les plus vendus, ceux qui ont le plus de pannes, le panier moyen, le total des remises effectuées par un vendeur, etc
 
 ## Hypothèses faites pour la modélisation
