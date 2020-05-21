@@ -26,7 +26,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède une description
 - possède un prix de référence 
 - peut possèder une consommation  
-- classé une catégorie 
+- classé dans une catégorie 
 - classé dans une sous-catégorie 
 - possède un propre numéro de série 
 - un prix affiché
@@ -34,7 +34,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - peut avoir une extension de garantie 
 
 **Fournisseur**
-- propose un ensemble de produits (ainsi plusieurs fournisseurs peuvent proposer le même produit)
+- posséde un nom
 
 **Personnel**
 - possède un identifiant
@@ -42,21 +42,20 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 **Facture**
 - réalisée par un membre du service vente
-- total (hypotèse)
-- nom du client (hypotèse)
-- numero de facture (hypotèse)
+- posséde un total 
+- posséde un numéro de facture
 
 **Ticket de prise en charge**
-- date
-- numero de serie du produit
+- posséde une date
+- posséde numero de serie du produit
 
 **Bon de commande**
-- reference produit 
-- quantite
+- posséde une reference produit 
+- posséde une quantité
 
 **Achat**
-- quantité 
-- prix unitaire
+- posséde une quantité 
+- posséde un prix unitaire
 
 **Réparation** 
 - le temps passé  
@@ -73,6 +72,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède un prenom
 - possède une date de naissance 
 - possède une adresseMail
+- typeClient (soit un particulier soit un professionel)
 
 ## Liste des contraintes associées à ces objets et propriétés
 
@@ -81,6 +81,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Pour chaque produit, il faut spécifier s'il peut donner lieu à une extension de garantie (qui passe alors de 2 à 5 ans)
 - Chaque action donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet
 - Chaque occurrence du produit ne provient évidemment que d'un seul fournisseur
+- Un fournisseur propose un ensemble de produits 
 - Plusieurs fournisseurs peuvent proposer le même produit
 - Pour une réparation, nous avons besoin de connaître le temps passé ainsi que le matériel utilisé, ce qui servira a établir la facture (si nécessaire) 
 - La facturation est toujours réalisée par un membre du service vente
