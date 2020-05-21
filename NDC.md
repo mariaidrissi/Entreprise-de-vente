@@ -10,14 +10,14 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 * Produit
 * Fournisseur
 * Facture
-* Réparation
-* Vente
-* Reprise d'objet 
 * Client
-* SAV 
 * Ticket de prise en charge
+* Reprise 
+* Réparation
 * Bon de commande
+* Personnel
 * Achat
+* Vente
 
 ## Liste des propriétés associées à chaque objet
 
@@ -58,20 +58,21 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - quantité 
 - prix unitaire
 
-
 **Réparation** 
 - le temps passé  
 - le matériel utilisé
-
 
 **Vente**
 - peut necessiter une Installation avec un professionnel
 
 **Reprise d'objet**
+- possède une contre partie 
 
 **Client**
-
-**SAV**
+- possède un nom, prenom, et date de naissance 
+- possède un prenom
+- possède une date de naissance 
+- possède une adresseMail
 
 ## Liste des contraintes associées à ces objets et propriétés
 
