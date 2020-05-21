@@ -34,7 +34,11 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - peut avoir une extension de garantie 
 
 **Fournisseur**
-- propose un ensemble de produits (ainsi plusieurs fournisseurs peuvent proposer le même produit), 
+- propose un ensemble de produits (ainsi plusieurs fournisseurs peuvent proposer le même produit)
+
+**Personnel**
+- possède un identifiant
+- appartient à un service : Vente, Réparation, Achat, Après vente
 
 **Facture**
 - réalisée par un membre du service vente
@@ -92,9 +96,9 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 ## Liste des fonctions que ces utilisateurs pourront effectuer
 - C'est le service vente qui réalise les factures
-- C'est le service  vente qui emmet les bons de commandes
+- C'est le service vente qui emmet les bons de commandes
 - C'est le service achat qui valide un achat suite au bon de commande avec une quantité de produits et le prix unitaire final
-- -C'est le service après vente qui crée le ticket de prise en charge
+- C'est le service après vente qui crée le ticket de prise en charge
 - Pouvoir retrouver différentes statistiques, comme par exemple les produits les plus vendus, ceux qui ont le plus de pannes, le panier moyen, le total des remises effectuées par un vendeur, etc
 
 ## Hypothèses faites pour la modélisation
