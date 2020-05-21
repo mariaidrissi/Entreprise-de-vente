@@ -82,7 +82,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Lors d'une vente, il faut préciser si l'installation doit être effectué par un spécialiste (auquel cas un supplément sera à régler)
 - Sur chaque facture, il peut y avoir des remises différentes appliquées sur chaque produit acheté
 - Le SAV est géré par un membre du service SAV : il crée le ticket de prise en charge et note la date (pour contrôler la garantie du produit)
-- Le SAV choisi de prendre en charge ou non la réparation, ou si c'est irréparable, de rendre le produit au client ou de proposer une remise sur un achat suite à la reprise du produit défectueux ;
+- Le SAV choisi de prendre en charge ou non la réparation, ou si c'est irréparable, de rendre le produit au client ou de proposer une remise sur un achat suite à la reprise du produit défectueux 
 
 
 ## Liste des utilisateurs (rôles) appelés à modifier et consulter les données
@@ -98,11 +98,11 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Pouvoir retrouver différentes statistiques, comme par exemple les produits les plus vendus, ceux qui ont le plus de pannes, le panier moyen, le total des remises effectuées par un vendeur, etc
 
 ## Hypothèses faites pour la modélisation
-- L'entreprise vend des produits de différentes marques ;
+- L'entreprise vend des produits de différentes marques 
 - Chaque action donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet ;
-- Chaque intervention du SAV se solde de trois manières différentes : le produit est irréparable et rendu au client (aucun frais) ou alors une offre de reprise peut-être faite, ou alors si c'est réparable l'entreprise peut effectuer la réparation ;
-- Différents services sont présents : le service vente, le service réparation et le service achat ;
-- Les clients peuvent être des particuliers ou des professionnels ;
-- Chaque produit vendu peut être un appareil, mais aussi une pièce détaché (le SAV se sert d'ailleurs des pièces détachés pour effectuer les réparations) ;
+- Chaque intervention du SAV se solde de trois manières différentes : le produit est irréparable et rendu au client (aucun frais) ou alors une offre de reprise peut-être faite, ou alors si c'est réparable l'entreprise peut effectuer la réparation 
+- Différents services sont présents : le service vente, le service réparation et le service achat 
+- Les clients peuvent être des particuliers ou des professionnels 
+- Chaque produit vendu peut être un appareil, mais aussi une pièce détaché (le SAV se sert d'ailleurs des pièces détachés pour effectuer les réparations) 
 - Pour chaque produit (appareil, accessoire, pièce détachée, etc.), il faut établir des relations de compatibilités avec les autres
 - Chaque achat est associé à un bon de commande
