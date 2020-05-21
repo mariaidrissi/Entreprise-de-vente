@@ -23,14 +23,22 @@ Fournisseur "1" -- "*" Produit : fourni >
 class Facture {
   numeroFacture : integer {key}
   total : float 
-  nomClient : string
 }
+
+
+class Client { 
+  nom : string {key}
+  prenom : string {key}
+  dateNaissance : string {key}
+  adresseMail : string
+}
+Facture "1" -- "1..*" Client : paye <
 
 Facture "1" -- "*" Produit : contient >
 
 class Personnel {
   idPersonnel: integer {key}
-  service : string
+  service : ['Vente', 'Réparation', 'Achat', 'Après vente' ]
 }
 
 
@@ -56,8 +64,6 @@ class Achat {
   quantite : integer
 }
 
-
-
 class Reparation  {
   tempsPassé : float {key}
   materielUtilisé : string
@@ -67,6 +73,7 @@ class Reprise  {
   contre-partie : string
 }
 
+
 note bottom of TicketPriseEnCharge
     concerne Reparation XOR concerne Reprise
 end note
@@ -74,4 +81,11 @@ TicketPriseEnCharge "1" -- "0..1" Reparation : concerne >
 Reparation "1" -- "1" Facture : donne lieu >
 TicketPriseEnCharge "1" -- "0..1" Reprise : concerne >
 Reprise "1" -- "1" Facture : donne lieu >
+
+Facture "1" -- "1" Vente : donne lieu <
+class Vente  {
+  installationRequise : boolean 
+}
+
+
 @enduml
