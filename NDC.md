@@ -44,17 +44,20 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 **Facture**
 - réalisée par un membre du service vente
-- posséde un total 
-- posséde un numéro de facture
+- possède un total sans remise
+- possède un numéro de facture
+- peut possèder un supplément si l'installation nécessite un spécialiste
+- peut possèder une remise à appliquer sur le total sans remise
+- possède un total final avec remise et supplément si il y a 
 
 **Ticket de prise en charge**
-- posséde une date, date à laquelle le produit a été pris en charge
-- posséde numero de serie du produit
+- possède une date, date à laquelle le produit a été pris en charge
+- possède numero de serie du produit
 - possède un booléan pour savoir si le ticket a été traité ou pas
 
 **Bon de commande**
-- posséde une reference produit 
-- posséde une quantité
+- possède une reference produit 
+- possède une quantité
 - possède un booléan pour savoir si le bon de commande a été traité ou pas
 
 **Achat**
@@ -72,9 +75,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède une contre partie 
 
 **Client**
-- possède un nom, prenom, et date de naissance 
-- possède un prenom
-- possède une date de naissance 
+- possède un nom, prenom, et date de naissance (les  trois constituent une clé)
 - possède une adresseMail
 - typeClient (soit un particulier soit un professionel)
 
@@ -114,8 +115,12 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Si une reparation est payante, le SAV demande au service vente de réaliser la facture car la facturation est toujours réalisée par un membre du service vente
 - Chaque intervention du SAV se solde de trois manières différentes : le produit est irréparable et rendu au client (aucun frais) ou alors une offre de reprise peut-être faite, ou alors si c'est réparable l'entreprise peut effectuer la réparation 
 - Si le produit est irréparable, et qu'on décide de le rendre au client, on détruit le ticket de prise en charge associé, donc un ticket de prise en charge qui a été traité concerne soit une rêparation soit une reprise 
+- Si le produit est repris par l'entreprise, on donne une contrepartie au client, cette contrepartie peut etre une remise à appliquer sur un poduit
 - Différents services sont présents : le service vente, le service réparation et le service achat 
 - Les clients peuvent être des particuliers ou des professionnels 
+- Un client professionnel n'est pas un fournisseur, ça peut etre une entreprise qui achète des produits en plus grande quantité  
 - Chaque produit vendu peut être un appareil, mais aussi une pièce détaché (le SAV se sert d'ailleurs des pièces détachés pour effectuer les réparations) 
 - Pour chaque produit (appareil, accessoire, pièce détachée, etc.), il faut établir des relations de compatibilités avec les autres
 - Chaque achat est associé à un bon de commande
+- Le supplément si jamais une installation est requise sera ajouté au total de la facture
+- Le total final de la facture, sera obtenu à partir du total sans remise auquel on aura  rajouté un supplément et une remise si nécessaire
