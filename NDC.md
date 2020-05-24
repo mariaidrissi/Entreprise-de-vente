@@ -1,4 +1,6 @@
-# Note de Clarification du projet Entreprise de vente (Sujet 32)
+# Note de Clarification du projet 
+
+Entreprise de vente (Sujet 32)
 
 ## Description du projet
 
@@ -46,7 +48,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - posséde un numéro de facture
 
 **Ticket de prise en charge**
-- posséde une date
+- posséde une date, date à laquelle le produit a été pris en charge
 - posséde numero de serie du produit
 
 **Bon de commande**
@@ -95,17 +97,19 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 
 - Membre du SAV 
 - Membre du service vente
+- Membre du service achat
 
 ## Liste des fonctions que ces utilisateurs pourront effectuer
 - C'est le service vente qui réalise les factures
 - C'est le service vente qui emmet les bons de commandes
 - C'est le service achat qui valide un achat suite au bon de commande avec une quantité de produits et le prix unitaire final
-- C'est le service après vente qui crée le ticket de prise en charge
+- C'est le service après vente qui crée le ticket de prise en charge, et qui décide si un produit est réparable, ou si le produit sera repris en proposant une remise au client ou si le produit lui sera rendu
 - Pouvoir retrouver différentes statistiques, comme par exemple les produits les plus vendus, ceux qui ont le plus de pannes, le panier moyen, le total des remises effectuées par un vendeur, etc
 
 ## Hypothèses faites pour la modélisation
 - L'entreprise vend des produits de différentes marques 
 - Chaque action donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet ;
+- Si une reparation est payante, le SAV demande au service vente de réaliser la facture car la facturation est toujours réalisée par un membre du service vente
 - Chaque intervention du SAV se solde de trois manières différentes : le produit est irréparable et rendu au client (aucun frais) ou alors une offre de reprise peut-être faite, ou alors si c'est réparable l'entreprise peut effectuer la réparation 
 - Différents services sont présents : le service vente, le service réparation et le service achat 
 - Les clients peuvent être des particuliers ou des professionnels 
