@@ -22,7 +22,10 @@ Fournisseur "1" -- "*" Produit : fourni >
 
 class Facture {
   numeroFacture : integer {key}
-  total : float 
+  totalsansRemise : float 
+  remise[0..1] : float
+  supplement [0..1] : float
+  totalFinal : float
 }
 
 
@@ -50,11 +53,13 @@ Personnel "1" -- "*" BonDeCommande : crée >
 class TicketPriseEnCharge {
   numeroSerieDuProduit : integer {key}
   date : string 
+  ticketTraité : boolean
 }
 
 class BonDeCommande {
   referenceProduit : integer {key}
   quantite : integer
+  bonTraité : boolean
 }
 
 
