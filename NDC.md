@@ -33,7 +33,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède un propre numéro de série 
 - un prix affiché
 - possède un fournisseur
-- peut avoir une extension de garantie 
+- peut avoir une extension de garantie (supplément ou gratuite)
 
 **Fournisseur**
 - posséde un nom
@@ -124,3 +124,4 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Chaque achat est associé à un bon de commande
 - Le supplément si jamais une installation est requise sera ajouté au total de la facture
 - Le total final de la facture, sera obtenu à partir du total sans remise auquel on aura  rajouté un supplément et une remise si nécessaire
+- L'extension de garantie peut être considéré comme un supplement dans la facture, sinon elle peut être proposé gratuitement pour certains produits
