@@ -50,10 +50,12 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 **Ticket de prise en charge**
 - posséde une date, date à laquelle le produit a été pris en charge
 - posséde numero de serie du produit
+- possède un booléan pour savoir si le ticket a été traité ou pas
 
 **Bon de commande**
 - posséde une reference produit 
 - posséde une quantité
+- possède un booléan pour savoir si le bon de commande a été traité ou pas
 
 **Achat**
 - posséde une quantité 
@@ -111,6 +113,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Chaque action donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet ;
 - Si une reparation est payante, le SAV demande au service vente de réaliser la facture car la facturation est toujours réalisée par un membre du service vente
 - Chaque intervention du SAV se solde de trois manières différentes : le produit est irréparable et rendu au client (aucun frais) ou alors une offre de reprise peut-être faite, ou alors si c'est réparable l'entreprise peut effectuer la réparation 
+- Si le produit est irréparable, et qu'on décide de le rendre au client, on détruit le ticket de prise en charge associé, donc un ticket de prise en charge qui a été traité concerne soit une rêparation soit une reprise 
 - Différents services sont présents : le service vente, le service réparation et le service achat 
 - Les clients peuvent être des particuliers ou des professionnels 
 - Chaque produit vendu peut être un appareil, mais aussi une pièce détaché (le SAV se sert d'ailleurs des pièces détachés pour effectuer les réparations) 
