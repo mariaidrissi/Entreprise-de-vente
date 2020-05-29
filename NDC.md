@@ -10,16 +10,24 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 ## Liste des objets nécessaires à la modélisation
 
 * Produit
+* OccurenceProduit
+* Categorie
+* SousCategorie
+* Marque
 * Fournisseur
-* Facture
-* Client
-* Ticket de prise en charge
-* Reprise 
-* Réparation
-* Bon de commande
 * Personnel
-* Achat
+* PersonnelSAV
+* PersonnelVente
+* PersonnelRéparation
+* PersonnelAchat
+* Facture
+* Ticket de prise en charge
+* Bon de commande
+* Réparation
 * Vente
+* Reprise 
+* Client
+
 
 ## Liste des propriétés associées à chaque objet
 
@@ -28,22 +36,50 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède une description
 - possède un prix de référence 
 - peut possèder une consommation  
-- classé dans une catégorie 
-- classé dans une sous-catégorie 
-- possède un propre numéro de série 
-- un prix affiché
-- possède un fournisseur
-- peut avoir une extension de garantie (supplément ou gratuite)
+- classé dans une sous-catégorie qui appartient à une catégorie
+- est fabriqué par une marque
+- peut avoir une extension de garantie qui passe de 2 ans à 5 ans (supplément ou gratuite)
+- reference un autre produit si il est compatible avec
+
+**OccurenceProduit**
+- possède un numéro de série
+- possède un prix affiché
+- possède une garantie
+- correspond à un produit 
+- est fourni par un fournisseur
+
+**Categorie**
+- possède un nom
+
+**SousCategorie**
+- possède un nom
+- appartient à une categorie (composition car cycle de vie lié)
+
+**Marque**
+- posséde un nom
 
 **Fournisseur**
 - posséde un nom
 
 **Personnel**
 - possède un identifiant
-- appartient à un service : Vente, Réparation, Achat, Après vente
+- possède un nom
+- possède un prénom
+
+**PersonnelSAV**
+- hérite de la classe Personnel
+
+**PersonnelVente**
+- hérite de la classe Personnel
+
+**PersonnelRéparation**
+- hérite de la classe Personnel
+
+**PersonnelAchat**
+- hérite de la classe Personnel
 
 **Facture**
-- réalisée par un membre du service vente
+- réalisée par un Personnel du service vente
 - possède un total sans remise
 - possède un numéro de facture
 - peut possèder un supplément si l'installation nécessite un spécialiste
@@ -56,13 +92,11 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède un booléan pour savoir si le ticket a été traité ou pas
 
 **Bon de commande**
-- possède une reference produit 
 - possède une quantité
+- possède un prix unitaire
 - possède un booléan pour savoir si le bon de commande a été traité ou pas
+- concerne un produit
 
-**Achat**
-- posséde une quantité 
-- posséde un prix unitaire
 
 **Réparation** 
 - le temps passé  
@@ -75,19 +109,19 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède une contre partie 
 
 **Client**
-- possède un nom, prenom, et date de naissance (les  trois constituent une clé)
+- possède un nom, prenom, et date de naissance (les trois constituent une clé)
 - possède une adresseMail
 - typeClient (soit un particulier soit un professionel)
 
 ## Liste des contraintes associées à ces objets et propriétés
 
 - Le prix de référence est proposé par la marque
-- Chaque produit est classé dans une catégorie et une sous-catégorie de produits 
+- Chaque produit est classé dans une sous catégorie qui appartient à une catégorie de produits 
 - Pour chaque produit, il faut spécifier s'il peut donner lieu à une extension de garantie (qui passe alors de 2 à 5 ans)
 - Chaque action donne lieu à une facturation, que ce soit une vente, une réparation ou une reprise d'un objet
 - Chaque occurrence du produit ne provient évidemment que d'un seul fournisseur
 - Un fournisseur propose un ensemble de produits 
-- Plusieurs fournisseurs peuvent proposer le même produit
+- Plusieurs marques peuvent proposer le même produit
 - Pour une réparation, nous avons besoin de connaître le temps passé ainsi que le matériel utilisé, ce qui servira a établir la facture (si nécessaire) 
 - La facturation est toujours réalisée par un membre du service vente
 - Lors d'une vente, il faut préciser si l'installation doit être effectué par un spécialiste (auquel cas un supplément sera à régler)
@@ -125,3 +159,5 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Le supplément si jamais une installation est requise sera ajouté au total de la facture
 - Le total final de la facture, sera obtenu à partir du total sans remise auquel on aura  rajouté un supplément et une remise si nécessaire
 - L'extension de garantie peut être considéré comme un supplement dans la facture, sinon elle peut être proposé gratuitement pour certains produits
+- On distingue marque et fournisseur, la marque fabrique le produit, et le fournisseur fournit le produit
+- Un client paye au moins une facture sinon il serait pas client de l'entreprise. 
