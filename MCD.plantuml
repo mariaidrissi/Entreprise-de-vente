@@ -97,10 +97,10 @@ PersonnelAchat "1" -- "*" BonDeCommande : valide >
 PersonnelVente "1" -- "*" BonDeCommande : crée >
 
 class TicketPriseEnCharge {
-  numeroSerieDuProduit : integer {key}
   date : string 
   ticketTraité : boolean
 }
+TicketPriseEnCharge "0..1" -- "1" OccurenceProduit: concerne >
 
 class BonDeCommande {
   date : string
@@ -109,7 +109,7 @@ class BonDeCommande {
   bonTraité : boolean
 }
 
-BonDeCommande "1" -- "1" Produit: concerne >
+BonDeCommande "0..1" -- "1" Produit: concerne >
 
 class Reparation  {
   tempsPassé : float {key}
