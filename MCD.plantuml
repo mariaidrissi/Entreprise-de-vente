@@ -1,24 +1,48 @@
 @startuml
 title UML Entreprise de vente
 
+package Produit {
+
+Produit "0..*" --  "0..*" Produit : compatible avec
 class Produit {
-  numeroDeSerie : integer {key}
-  prixAffiche : float
   reference : string
   prixReference : float
   description : string
-  consommation : date
-  categorie: string
-  sousCategorie: string
   extensionGarantie : boolean
 }
+
+Marque "1" -- "*" Produit : fabrique >
+
+class Marque {
+	nom : string {key}
+}
+
+class Categorie {
+	nom : string {key}
+}
+
+class SousCategorie {
+	nom : string {key}
+}
+
+SousCategorie "*" --* Categorie
+Produit  "*" -- "1" SousCategorie : appartient à
+
+}
+
+class OccurenceProduit {
+  numeroDeSerie : integer {key}
+  prixAffiche : float
+  consommation : date
+}
+
+OccurenceProduit  "1" -- "1" Produit : correspond à
 
 class Fournisseur {
 	nom : string {key}
 }
 
-Fournisseur "1" -- "*" Produit : fourni >
-
+Fournisseur "1" -- "*" OccurenceProduit : fourni >
 
 class Facture {
   numeroFacture : integer {key}
@@ -36,19 +60,41 @@ class Client {
   adresseMail : string
   typeClient : ['Professionel', 'Particulier']
 }
-Facture "1" -- "1..*" Client : paye <
+Facture "1..*" -- "1" Client : paye <
 
-Facture "1" -- "*" Produit : contient >
+Facture "1" -- "*" OccurenceProduit : contient >
 
+
+package Personnel {
+  
 class Personnel {
   idPersonnel: integer {key}
-  service : ['Vente', 'Réparation', 'Achat', 'Après vente' ]
+  nom : string 
+  prenom : string 
 }
 
+class PersonnelAchat{
+}
 
-Personnel "1" -- "*" Facture : réalise >
-Personnel "1" -- "*" TicketPriseEnCharge : crée >
-Personnel "1" -- "*" BonDeCommande : crée >
+class PersonnelVente{
+}
+
+class PersonnelSAV{
+}
+
+class PersonnelReparation{
+}
+
+Personnel <|-- PersonnelAchat
+Personnel <|-- PersonnelVente
+Personnel <|-- PersonnelReparation
+Personnel <|-- PersonnelSAV
+}
+
+PersonnelVente "1" -- "*" Facture : réalise >
+PersonnelSAV "1" -- "*" TicketPriseEnCharge : crée >
+PersonnelAchat "1" -- "*" BonDeCommande : valide >
+PersonnelVente "1" -- "*" BonDeCommande : crée >
 
 class TicketPriseEnCharge {
   numeroSerieDuProduit : integer {key}
@@ -57,18 +103,13 @@ class TicketPriseEnCharge {
 }
 
 class BonDeCommande {
-  referenceProduit : integer {key}
+  date : string
   quantite : integer
+  prixUnitaire : float
   bonTraité : boolean
 }
 
-
-Achat "1" -- "1" BonDeCommande : concerne 
-
-class Achat {
-  prixUnitaire : float
-  quantite : integer
-}
+BonDeCommande "1" -- "1" Produit: concerne >
 
 class Reparation  {
   tempsPassé : float {key}
@@ -80,7 +121,7 @@ class Reprise  {
 }
 
 
-note bottom of TicketPriseEnCharge
+note right of TicketPriseEnCharge
     concerne Reparation XOR concerne Reprise
 end note
 TicketPriseEnCharge "1" -- "0..1" Reparation : concerne >
@@ -92,6 +133,4 @@ Facture "1" -- "1" Vente : donne lieu <
 class Vente  {
   installationRequise : boolean 
 }
-
-
 @enduml
