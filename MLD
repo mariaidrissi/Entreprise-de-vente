@@ -1,0 +1,53 @@
+
+
+Produit (#pseudo : string, prenom : string, nom : string, dateNaissance : date, longitude : string, latitude : string, compte=>Compte)
+
+Produit(#reference : varchar, prixReference : float, description : varchar, extensionGarantie : boolean, consommation : integer, marque=>Marque, #sousCategorie=>SousCategorie) avec prixReference>0, marque NOT NULL, sousCategorie NOT NULL, extensionGarantie NOT NULL
+
+ProduitCompatibleProduit(#Produit1=>Produit, #Produit2=>Produit)
+
+Marque(#nom : varchar)
+
+Categorie(#nom : varchar) 
+
+SousCategorie(#nom : varchar, #categorie=>Categorie) 
+
+OccurenceProduit(#numeroDeSerie : integer, prixAffiche : float, referenceProduit=>Produit, fournisseur=>Fournisseur, ticketPriseEnCharge=>TicketPriseEnCharge) avec prixAffiche>0, referenceProduit NOT NULL, fournisseur NOT NULL
+
+Facture(#numeroFacture : integer, totalsansRemise : float, remise : float, supplement : float, totalFinal : float, client=>Client, personnel=>PersonnelVente, reprise=>Reprise, reparation=>Reparation, vente=>Vente) avec totalsansRemise NOT NULL, totalFinal NOT NULL, client NOT NULL, personnel NOT NULL
+
+Intersection(Restriction(Facture, reparation NULL), Restriction(Facture, reprise NULL), Restriction(Facture, vente NULL))={}
+ET ((reparation NULL AND vente NULL) OR (reparation NULL AND reprise NULL) OR (vente NULL AND reprise NULL)) 
+
+FactureOccurenceProduit(#facture=>Facture, #produit=>OccurenceProduit)
+
+PROJECTION(FactureOccurenceProduit, facture) = PROJECTION(Facture, numeroFacture)
+
+Fournisseur(#nom : varchar)
+
+Client(#nom : varchar, #prenom : varchar, #dateNaissance : varchar, adresseMail : varchar, typeClient : varchar avec typeClient=Professionel OR typeClient=Particulier
+
+PROJECTION(Client, nom) = PROJECTION(Facture,client)
+
+PersonnelAchat(#idPersonnel: integer, nom : varchar, prenom : varchar)
+
+PersonnelVente(#idPersonnel: integer, nom : varchar, prenom : varchar)
+
+PersonnelSAV(#idPersonnel: integer, nom : varchar, prenom : varchar)
+
+PersonnelReparation(#idPersonnel: integer, nom : varchar, prenom : varchar)
+
+vPersonnel=Union(Projection(PersonnelAchat,idPersonnel,nom, prenom),Projection(PersonnelVente,idPersonnel,nom, prenom),Projection(PersonnelSAV,idPersonnel,nom, prenom), Projection(PersonnelReparation,idPersonnel,nom, prenom))
+
+TicketPriseEnCharge(date : string, ticketTraité : boolean, produit=>OccurenceProduit, personnel=>PersonnelSAV, reparation=>Reparation, reprise=>Reprise) avec produit NOT NULL, personnel NOT NULL
+
+Intersection(Restriction(TicketPriseEnCharge, reparation not NULL), Restriction(TicketPriseEnCharge, reprise not NULL))={}
+ET Intersection(Restriction(TicketPriseEnCharge, reparation NULL), Restriction(TicketPriseEnCharge, reprise NULL))={}
+
+BonDeCommande(date : varchar, quantite : integer, prixUnitaire : float, bonTraité : boolean, produit=>Produit, personnelQuiCree=>PersonnelVente, personnelQuiValide=>PersonnelAchat) avec produit NOT NULL, personnelQuiCree NOT NULL, personnelQuiValide NOT NULL, prixUnitaire >0, quantite>0
+
+Reparation(tempsPassé : float, materielUtilisé : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture)
+
+Reprise(contre-partie : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture)
+
+Vente(installationRequise : boolean, facture=>Facture)
