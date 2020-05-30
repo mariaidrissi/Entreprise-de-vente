@@ -161,3 +161,5 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - L'extension de garantie peut être considéré comme un supplement dans la facture, sinon elle peut être proposé gratuitement pour certains produits
 - On distingue marque et fournisseur, la marque fabrique le produit, et le fournisseur fournit le produit
 - Un client paye au moins une facture sinon il serait pas client de l'entreprise. 
+- Une occurence peut etre dans plusieurs factures, car cela peut etre une facture d'achat ou de reprise ou de reparation
+- Une facture est soi une facture de vente, de reprise ou de reparation
