@@ -35,7 +35,7 @@ PersonnelReparation(#idPersonnel: integer, nom : varchar, prenom : varchar)
 
 vPersonnel=Union(Projection(PersonnelAchat,idPersonnel,nom, prenom),Projection(PersonnelVente,idPersonnel,nom, prenom),Projection(PersonnelSAV,idPersonnel,nom, prenom), Projection(PersonnelReparation,idPersonnel,nom, prenom))
 
-TicketPriseEnCharge(#numeroTicket: integer, date : string, ticketTraité : boolean, produit=>OccurenceProduit, personnel=>PersonnelSAV, reparation=>Reparation, reprise=>Reprise) avec produit NOT NULL, personnel NOT NULL
+TicketPriseEnCharge(#numeroTicket: integer, date : varchar, ticketTraité : boolean, produit=>OccurenceProduit, personnel=>PersonnelSAV, reparation=>Reparation, reprise=>Reprise) avec produit NOT NULL, personnel NOT NULL
 
 Intersection(Restriction(TicketPriseEnCharge, reparation not NULL), Restriction(TicketPriseEnCharge, reprise not NULL))={}
 ET Intersection(Restriction(TicketPriseEnCharge, reparation NULL), Restriction(TicketPriseEnCharge, reprise NULL))={}
