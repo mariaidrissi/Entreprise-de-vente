@@ -116,11 +116,13 @@ class BonDeCommande {
 BonDeCommande "0..N" -- "1" Produit: concerne >
 
 class Reparation  {
+  numeroReparation : integer{key}
   tempsPassé : float 
   materielUtilisé : string
 }
 
 class Reprise  {
+  numeroReprise : integer{key}
   contre-partie : string
 }
 
@@ -135,6 +137,7 @@ Reprise "0..1" -- "1" Facture : donne lieu >
 
 Facture "1" -- "0..1" Vente : donne lieu <
 class Vente  {
+  numeroVente : integer{key}
   installationRequise : boolean 
 }
 @enduml
