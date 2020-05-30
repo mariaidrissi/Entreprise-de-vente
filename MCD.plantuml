@@ -99,12 +99,14 @@ PersonnelAchat "1" -- "*" BonDeCommande : valide >
 PersonnelVente "1" -- "*" BonDeCommande : crée >
 
 class TicketPriseEnCharge {
+  numeroTicket: integer {key}
   date : string 
   ticketTraité : boolean
 }
 TicketPriseEnCharge "0..1" -- "1" OccurenceProduit: concerne >
 
 class BonDeCommande {
+  numeroBonDeCommande: integer {key}
   date : string
   quantite : integer
   prixUnitaire : float
