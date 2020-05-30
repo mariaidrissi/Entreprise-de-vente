@@ -3,13 +3,16 @@ title UML Entreprise de vente
 
 package Produit {
 
-Produit "0..*" --  "0..*" Produit : compatible avec
 class Produit {
-  reference : string
+  reference : string {key}
   prixReference : float
   description : string
   extensionGarantie : boolean
+  consommation[0..1]: integer
 }
+
+
+Produit "0..*" --  "0..*" Produit : compatible avec
 
 Marque "1" -- "*" Produit : fabrique >
 
@@ -27,16 +30,15 @@ class SousCategorie {
 
 SousCategorie "*" --* Categorie
 Produit  "*" -- "1" SousCategorie : appartient à
-
 }
+
 
 class OccurenceProduit {
   numeroDeSerie : integer {key}
   prixAffiche : float
-  consommation : date
 }
 
-OccurenceProduit  "1" -- "1" Produit : correspond à
+OccurenceProduit  "*" -- "1" Produit : correspond à
 
 class Fournisseur {
 	nom : string {key}
@@ -62,12 +64,12 @@ class Client {
 }
 Facture "1..*" -- "1" Client : paye <
 
-Facture "1" -- "*" OccurenceProduit : contient >
+Facture "0..*" -- "1..*" OccurenceProduit : contient >
 
 
 package Personnel {
   
-class Personnel {
+abstract class Personnel {
   idPersonnel: integer {key}
   nom : string 
   prenom : string 
@@ -109,10 +111,10 @@ class BonDeCommande {
   bonTraité : boolean
 }
 
-BonDeCommande "0..1" -- "1" Produit: concerne >
+BonDeCommande "0..N" -- "1" Produit: concerne >
 
 class Reparation  {
-  tempsPassé : float {key}
+  tempsPassé : float 
   materielUtilisé : string
 }
 
@@ -125,11 +127,11 @@ note right of TicketPriseEnCharge
     concerne Reparation XOR concerne Reprise
 end note
 TicketPriseEnCharge "1" -- "0..1" Reparation : concerne >
-Reparation "1" -- "1" Facture : donne lieu >
+Reparation "0..1" -- "1" Facture : donne lieu >
 TicketPriseEnCharge "1" -- "0..1" Reprise : concerne >
-Reprise "1" -- "1" Facture : donne lieu >
+Reprise "0..1" -- "1" Facture : donne lieu >
 
-Facture "1" -- "1" Vente : donne lieu <
+Facture "1" -- "0..1" Vente : donne lieu <
 class Vente  {
   installationRequise : boolean 
 }
