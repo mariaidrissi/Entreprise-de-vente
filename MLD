@@ -42,8 +42,8 @@ ET Intersection(Restriction(TicketPriseEnCharge, reparation NULL), Restriction(T
 
 BonDeCommande(#numeroBonDeCommande: integer, date : varchar, quantite : integer, prixUnitaire : float, bonTraité : boolean, produit=>Produit, personnelQuiCree=>PersonnelVente, personnelQuiValide=>PersonnelAchat) avec produit NOT NULL, personnelQuiCree NOT NULL, personnelQuiValide NOT NULL, prixUnitaire >0, quantite>0
 
-Reparation(#numeroReparation, tempsPassé : float, materielUtilisé : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge NOT NULL, facture NOT NULL
+Reparation(#numeroReparation : integer, tempsPassé : float, materielUtilisé : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge NOT NULL, facture NOT NULL
 
-Reprise(#numeroReprise, contre-partie : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge NOT NULL, facture NOT NULL
+Reprise(#numeroReprise : integer, contre-partie : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge NOT NULL, facture NOT NULL
 
-Vente(#numeroVente, installationRequise : boolean, facture=>Facture) avec facture NOT NULL
+Vente(#numeroVente : integer, installationRequise : boolean, facture=>Facture) avec facture NOT NULL
