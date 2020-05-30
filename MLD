@@ -21,7 +21,7 @@ PROJECTION(FactureOccurenceProduit, facture) = PROJECTION(Facture, numeroFacture
 
 Fournisseur(#nom : varchar)
 
-Client(#nom : varchar, #prenom : varchar, #dateNaissance : varchar, adresseMail : varchar, typeClient : varchar avec typeClient=Professionel OR typeClient=Particulier
+Client(#nom : varchar, #prenom : varchar, #dateNaissance : varchar, adresseMail : varchar, typeClient : varchar) avec typeClient=Professionel OR typeClient=Particulier
 
 PROJECTION(Client, nom) = PROJECTION(Facture,client)
 
