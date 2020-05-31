@@ -132,6 +132,8 @@ note right of TicketPriseEnCharge
     concerne Reparation XOR concerne Reprise
 end note
 
+note "Une facture est soi une facture de reparation, de reprise ou de vente" as N1
+
 TicketPriseEnCharge "1" -- "0..1" Reparation : concerne >
 Reparation "0..1" -- "1" Facture : donne lieu >
 TicketPriseEnCharge "1" -- "0..1" Reprise : concerne >
