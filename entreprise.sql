@@ -149,7 +149,7 @@ CREATE TABLE BonDeCommande(
 -- Views 
 
 CREATE VIEW vueticketPriseEncharge(nbTicket) AS
-SELECT COUNT(DISTINCT Reparation.ticketPriseEnCharge)
+SELECT COUNT(*)
 FROM Reparation, Reprise
 WHERE Reparation.ticketPriseEnCharge=Reprise.ticketPriseEnCharge;
 
@@ -290,37 +290,58 @@ INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, 
 
 INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)VALUES
 (26724, 505, 50, '456132584', 1287),
-(12354, 910, 40, '753715738', 2347);
+(12354, 910, 40, '753715738', 2347), 
+(19875, 590, 40, '537537683', 2347), 
+(54324, 590, 0, '467846776', 2347);
 
 -- Test du 0 par default de supplement
 
 INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)VALUES
 (98479, 90, '537537683', 2231),
-(65283, 89, '467846776', 2347);
+(65283, 89, '467846776', 2347),
+(32415, 0, '245367283', 1287);
 
 INSERT INTO Reparation(numeroReparation, tempsPassé, ticketPriseEnCharge, facture) VALUES
 (53678, 0.4, 736, 98479),
 (65421, 0.5, 372, 65283);
 
---Pour tester la vueTicketPriseEnCharge en mettant le meme numero de ticketPriseEnCharge
-
 INSERT INTO Reprise VALUES
-(67892, 'Remise de 50% à appliquer en caisse', 736, 65283);
-
---Pour tester la vueFacture en mettant le meme numero de facture
+(67892, 'Remise de 50% à appliquer en caisse', 376, 32415);
 
 INSERT INTO Vente VALUES
-(456723, 'false', 98479);
+(456723, 'false', 45254),
+(376277, 'true', 45678),
+(942757, 'true', 63729),
+(635267, 'false', 26724), 
+(362736,'true', 12354),
+(526726, 'true', 19875),
+(153657, 'false', 54324);
 
 INSERT INTO FactureOccurenceProduit VALUES
 (45678, 8347836),
 (63729, 3276433),
 (45254, 1236537),
 (26724, 7367483),
-(12354, 2425364),
 (98479, 7785385),
-(65283, 2723759);
+(19875, 7785385),
+(54324, 2723759),
+(65283, 2723759),
+(12354, 2425364),
+(32415, 2425364);
 
 INSERT INTO BonDeCommande VALUES
 (4567, '2020-02-09', 5, 500, 'true', 'Plaque induction PUJ631BB1E', 2337, 2637),
 (3214, '2020-02-10', 8, 290, 'true', 'Television 27 DH YT', 2337, 2637); 
+
+
+/* -- Pour tester la vueFacture en mettant le meme numero de facture
+
+INSERT INTO Vente VALUES
+(456723, 'false', 98479);
+
+--Pour tester la vueTicketPriseEnCharge en mettant le meme numero de ticketPriseEnCharge 
+
+INSERT INTO Reprise VALUES
+(67892, 'Remise de 50% à appliquer en caisse', 736, 65283);
+
+ */
