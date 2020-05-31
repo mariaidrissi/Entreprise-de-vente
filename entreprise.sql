@@ -16,8 +16,8 @@ CREATE TABLE Categorie(
 
 CREATE TABLE SousCategorie(
  nom VARCHAR PRIMARY KEY,
- sousCategorie VARCHAR, 
- FOREIGN KEY(sousCategorie) REFERENCES Categorie(nom)
+ categorie VARCHAR, 
+ FOREIGN KEY(categorie) REFERENCES Categorie(nom)
 );
 
 CREATE TABLE Produit(
@@ -174,3 +174,33 @@ UNION
 SELECT * FROM PersonnelSAV 
 UNION 
 SELECT * FROM PersonnelReparation;
+
+INSERT INTO Marque VALUES
+('Sonic'),
+('LG'),
+('Samsung'),
+('Apple'),
+('Bosch');
+
+INSERT INTO Categorie VALUES
+('Cuisine'),
+('Chambre'),
+('Jardin'),
+('Informatique'),
+('Electromenager');
+
+INSERT INTO SousCategorie VALUES
+('Petit Electromenager', 'Cuisine'),
+('Ustensile', 'Cuisine'),
+('Literie', 'Chambre'),
+('Lampes', 'Chambre'),
+('Bricolage', 'Jardin'),
+('Jardinage', 'Jardin'),
+('Ordinateur', 'Informatique'),
+('Telephone', 'Informatique'),
+('Cuisson', 'Electromenager'),
+('Aspirateur et nettoyeur', 'Electromenager');
+
+INSERT INTO Produit VALUES 
+('Lave linge WD 80 K 5 B 10', 600, 'Lave linge et secheur frontal', 'true', 8,	'Samsung', 'Aspirateur et nettoyeur'),
+('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson');
