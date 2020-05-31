@@ -10,7 +10,7 @@ SousCategorie(#nom : varchar, #categorie=>Categorie)
 
 OccurenceProduit(#numeroDeSerie : integer, prixAffiche : float, referenceProduit=>Produit, fournisseur=>Fournisseur) avec prixAffiche NOT NULL, prixAffiche>0, referenceProduit NOT NULL, fournisseur NOT NULL
 
-Facture(#numeroFacture : integer, totalsansRemise : float, remise : float, supplement : float, totalFinal : float, client=>Client, personnel=>PersonnelVente) avec totalsansRemise NOT NULL, totalFinal NOT NULL, client NOT NULL, personnel NOT NULL
+Facture(#numeroFacture : integer, totalsansRemise : float, remise : float, supplement : float, client=>Client, personnel=>PersonnelVente) avec totalsansRemise NOT NULL, client NOT NULL, personnel NOT NULL
 
 FactureOccurenceProduit(#facture=>Facture, #produit=>OccurenceProduit)
 
