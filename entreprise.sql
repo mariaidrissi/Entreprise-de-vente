@@ -158,8 +158,8 @@ SELECT COUNT(*)
 FROM Reparation, Reprise, Vente
 WHERE (Reparation.facture=Reprise.facture OR Reprise.facture=Vente.facture OR Reparation.facture=Vente.facture);
 
-CREATE VIEW vueFactureOccurenceProduit(nbFactureTotal, nbFactureAvecProduit) AS
-SELECT COUNT(FactureOccurenceProduit.facture), COUNT(Facture.numeroFacture)
+CREATE VIEW vueFactureOccurenceProduit(nbFactureAvecProduit, nbFactureTotal) AS
+SELECT COUNT(DISTINCT FactureOccurenceProduit.facture), COUNT(DISTINCT Facture.numeroFacture)
 FROM FactureOccurenceProduit, Facture;
 
 CREATE VIEW vueFactureClient(nbClient, nbFactureAvecClient) AS
@@ -199,6 +199,7 @@ INSERT INTO Categorie VALUES
 INSERT INTO SousCategorie VALUES
 ('Petit Electromenager', 'Cuisine'),
 ('Ustensile', 'Cuisine'),
+('Gros Electromenager', 'Cuisine'),
 ('Literie', 'Chambre'),
 ('Lampes', 'Chambre'),
 ('Bricolage', 'Jardin'),
@@ -218,7 +219,9 @@ INSERT INTO Fournisseur VALUES
 INSERT INTO Produit VALUES 
 ('Lave linge WD 80 K 5 B 10', 600, 'Lave linge et secheur frontal', 'true', 8,	'Samsung', 'Aspirateur et nettoyeur'),
 ('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson'),
-('Plaque induction PUJ631BB1E', 500, '4 plaques inductions', 'false', 9, 'Bosch', 'Cuisson');
+('Plaque induction PUJ631BB1E', 500, '4 plaques inductions', 'false', 9, 'Bosch', 'Cuisson'),
+('Television 27 DH YT', 290, 'Ecran plat Full HD 4K', 'true', 4, 'LG', 'Cuisson'),
+('Frigo AJ 64 87', 900, 'Frigo avec compartiment congélateur', 'true', 13, 'Bosch', 'Gros Electromenager');
 
 INSERT INTO ProduitCompatibleProduit VALUES
 ('Four encastrable pyrolyse HB675G0S1F iQ700','Plaque induction PUJ631BB1E');
@@ -228,8 +231,11 @@ INSERT INTO OccurenceProduit VALUES
 (7785385, 590, 'Lave linge WD 80 K 5 B 10', 'GeneralElectromenager'),
 (2723759, 590, 'Lave linge WD 80 K 5 B 10', 'Saphir'),
 (3276433, 439, 'Four encastrable pyrolyse HB675G0S1F iQ700', 'GeneralElectromenager'), 
-(3397448, 439, 'Lave linge WD 80 K 5 B 10', 'Saphir'),
-(7457484, 439, 'Lave linge WD 80 K 5 B 10', 'GeneralElectromenager');
+(3397448, 439, 'Four encastrable pyrolyse HB675G0S1F iQ700', 'Saphir'),
+(7457484, 439, 'Four encastrable pyrolyse HB675G0S1F iQ700', 'GeneralElectromenager'), 
+(1236537, 300, 'Television 27 DH YT', 'Telephonie'),
+(7367483, 505, 'Plaque induction PUJ631BB1E', 'CuisinePourTous'),
+(2425364, 910, 'Frigo AJ 64 87', 'CuisinePourTous');
 
 
 INSERT INTO PersonnelAchat VALUES
@@ -264,8 +270,7 @@ INSERT INTO TicketPriseEnCharge VALUES
 (736, '2020-02-09', 'true', 8347836, 2413),
 (273, '2020-04-09', 'true', 8347836, 2413),
 (372, '2020-06-09', 'true', 7785385, 1342),
-(376, '2020-06-10', 'false', 3276433, 2134)
-;
+(376, '2020-06-10', 'false', 3276433, 2134);
 
 INSERT INTO Client VALUES
 (372647289,'Idrissi', 'Rita', '1990-06-10', 'idrissi.rita@lilo.org', 'Particulier'),
@@ -273,27 +278,29 @@ INSERT INTO Client VALUES
 (456789938, 'Brasseur', 'Solene', '1995-06-10', 'brasseur.sln@lilo.org', 'Particulier'),
 (456132584, 'Lafond', 'Colin', '1994-03-12', 'lfd.colin@lilo.org', 'Particulier'),
 (753715738, 'Bond', 'James', '1998-06-10', 'bond.007@lilo.org', 'Professionnel'),
-(537537683, 'Taylor', 'Vanessa', '1998-05-03', 'vanessa.taylor@lilo.org', 'Professionnel');
+(537537683, 'Taylor', 'Vanessa', '1998-05-03', 'vanessa.taylor@lilo.org', 'Professionnel'),
+(467846776, 'Bass', 'Chuck', '1991-05-03', 'chuck.bass@lilo.org', 'Professionnel');
 
 INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, personnel)VALUES
-(45678, 490, -10, 5, '372647289', 1334),
-(63729, 150, -20, 30, '245367283', 1334),
+(45678, 590, -10, 5, '372647289', 1334),
+(63729, 439, -20, 30, '245367283', 1334),
 (45254, 300, -10, 10, '456789938', 2337);
 
 -- Test du 0 par default de remise
 
 INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)VALUES
-(26724, 110, 50, '456132584', 1287),
-(12354, 900, 40, '753715738', 2347),
-(98463, 340, 10, '537537683', 2231);
+(26724, 505, 50, '456132584', 1287),
+(12354, 910, 40, '753715738', 2347);
+
+-- Test du 0 par default de supplement
 
 INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)VALUES
-(98479, 90, '456132584', 2231),
-(65283, 89, '753715738', 2347),
-(67294, 74, '537537683', 1287);
+(98479, 90, '537537683', 2231),
+(65283, 89, '467846776', 2347);
 
 INSERT INTO Reparation(numeroReparation, tempsPassé, ticketPriseEnCharge, facture) VALUES
-(53678, 0.4, 736, 98479);
+(53678, 0.4, 736, 98479),
+(65421, 0.5, 372, 65283);
 
 --Pour tester la vueTicketPriseEnCharge en mettant le meme numero de ticketPriseEnCharge
 
@@ -305,3 +312,15 @@ INSERT INTO Reprise VALUES
 INSERT INTO Vente VALUES
 (456723, 'false', 98479);
 
+INSERT INTO FactureOccurenceProduit VALUES
+(45678, 8347836),
+(63729, 3276433),
+(45254, 1236537),
+(26724, 7367483),
+(12354, 2425364),
+(98479, 7785385),
+(65283, 2723759);
+
+INSERT INTO BonDeCommande VALUES
+(4567, '2020-02-09', 5, 500, 'true', 'Plaque induction PUJ631BB1E', 2337, 2637),
+(3214, '2020-02-10', 8, 290, 'true', 'Television 27 DH YT', 2337, 2637); 
