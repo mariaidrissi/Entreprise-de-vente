@@ -49,17 +49,18 @@ Fournisseur "1" -- "*" OccurenceProduit : fourni >
 class Facture {
   numeroFacture : integer {key}
   totalsansRemise : float 
-  remise[0..1] : float
-  supplement [0..1] : float
-  totalFinal : float
+  remise : float
+  supplement : float
+  totalFinal() : float
 }
 
 
 class Client { 
-  nom : string {key}
-  prenom : string {key}
-  dateNaissance : string {key}
-  adresseMail : string
+  numeroCarteIdentite :integer {key}
+  nom : string 
+  prenom : string 
+  dateNaissance : string 
+  adresseMail [0..1]: string
   typeClient : ['Professionel', 'Particulier']
 }
 Facture "1..*" -- "1" Client : paye <
@@ -103,7 +104,7 @@ class TicketPriseEnCharge {
   date : string 
   ticketTraité : boolean
 }
-TicketPriseEnCharge "0..1" -- "1" OccurenceProduit: concerne >
+TicketPriseEnCharge "0..*" -- "1" OccurenceProduit: concerne >
 
 class BonDeCommande {
   numeroBonDeCommande: integer {key}
@@ -118,18 +119,19 @@ BonDeCommande "0..N" -- "1" Produit: concerne >
 class Reparation  {
   numeroReparation : integer{key}
   tempsPassé : float 
-  materielUtilisé : string
+  materielUtilisé [0..1]: string
 }
 
 class Reprise  {
   numeroReprise : integer{key}
-  contre-partie : string
+  contrePartie : string
 }
 
 
 note right of TicketPriseEnCharge
     concerne Reparation XOR concerne Reprise
 end note
+
 TicketPriseEnCharge "1" -- "0..1" Reparation : concerne >
 Reparation "0..1" -- "1" Facture : donne lieu >
 TicketPriseEnCharge "1" -- "0..1" Reprise : concerne >
