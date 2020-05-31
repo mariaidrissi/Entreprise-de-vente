@@ -84,7 +84,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - possède un numéro de facture
 - peut possèder un supplément si l'installation nécessite un spécialiste
 - peut possèder une remise à appliquer sur le total sans remise
-- possède un total final avec remise et supplément si il y a 
+- possède une methode total final pour calculer le total avec remise et supplément si il y a 
 
 **Ticket de prise en charge**
 - possède une date, date à laquelle le produit a été pris en charge
