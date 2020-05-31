@@ -18,17 +18,17 @@ PROJECTION(FactureOccurenceProduit, facture) = PROJECTION(Facture, numeroFacture
 
 Fournisseur(#nom : varchar)
 
-Client(#nom : varchar, #prenom : varchar, #dateNaissance : varchar, adresseMail : varchar, typeClient : varchar) avec typeClient=Professionel OR typeClient=Particulier
+Client(#numeroCarteIdentite :integer, nom : varchar, prenom : varchar, dateNaissance : varchar, adresseMail : varchar, typeClient : varchar) avec nom NOT NULL, prenom NOT NULL, dateNaissance NOT NULL, typeClient=Professionel OR typeClient=Particulier
 
-PROJECTION(Client, nom) = PROJECTION(Facture,client)
+PROJECTION(Client, numeroCarteIdenite) = PROJECTION(Facture,client)
 
-PersonnelAchat(#idPersonnel: integer, nom : varchar, prenom : varchar)
+PersonnelAchat(#idPersonnel: integer, nom : varchar, prenom : varchar) avec nom NOT NULL, prenom NOT NULL
 
-PersonnelVente(#idPersonnel: integer, nom : varchar, prenom : varchar)
+PersonnelVente(#idPersonnel: integer, nom : varchar, prenom : varchar) avec nom NOT NULL, prenom NOT NULL
 
-PersonnelSAV(#idPersonnel: integer, nom : varchar, prenom : varchar)
+PersonnelSAV(#idPersonnel: integer, nom : varchar, prenom : varchar) avec nom NOT NULL, prenom NOT NULL
 
-PersonnelReparation(#idPersonnel: integer, nom : varchar, prenom : varchar)
+PersonnelReparation(#idPersonnel: integer, nom : varchar, prenom : varchar) avec nom NOT NULL, prenom NOT NULL
 
 vPersonnel=UNION(PROJECTION(PersonnelAchat,idPersonnel,nom, prenom), PROJECTION(PersonnelVente,idPersonnel,nom, prenom), PROJECTION(PersonnelSAV,idPersonnel,nom, prenom), PROJECTION(PersonnelReparation,idPersonnel,nom, prenom))
 
