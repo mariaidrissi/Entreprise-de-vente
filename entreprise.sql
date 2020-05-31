@@ -22,8 +22,8 @@ CREATE TABLE SousCategorie(
 
 CREATE TABLE Produit(
   reference VARCHAR PRIMARY KEY,
-  prixReference FLOAT,
-  description VARCHAR,
+  prixReference FLOAT NOT NULL,
+  description VARCHAR NOT NULL,
   extensionGarantie BOOLEAN NOT NULL,
   consommation INTEGER, 
   marque VARCHAR REFERENCES Marque(nom) NOT NULL,
@@ -45,8 +45,7 @@ CREATE TABLE Fournisseur(
 
 CREATE TABLE OccurenceProduit(
  numeroDeSerie INTEGER PRIMARY KEY,
- prixAffiche FLOAT, 
- sousCategorie VARCHAR, 
+ prixAffiche FLOAT NOT NULL,  
  referenceProduit VARCHAR REFERENCES Produit(reference) NOT NULL,
  fournisseur VARCHAR REFERENCES Fournisseur(nom) NOT NULL,
  CHECK (prixAffiche >0)
@@ -90,7 +89,8 @@ CREATE TABLE Client(
  dateNaissance VARCHAR UNIQUE,
  adresseMail VARCHAR,
  typeClient VARCHAR, 
- PRIMARY KEY (nom, prenom, dateNaissance)
+ PRIMARY KEY (nom, prenom, dateNaissance), 
+ CHECK (typeClient = 'Particulier' OR typeClient = 'Professionnel')
 );
 
 CREATE TABLE Facture(
@@ -107,21 +107,21 @@ CREATE TABLE Reparation(
  numeroReparation INTEGER PRIMARY KEY,
  tempsPassé FLOAT NOT NULL,
  materielUtilisé VARCHAR,
- ticketPriseEnCharge INTEGER REFERENCES TicketPriseEnCharge(numeroTicket) NOT NULL,
- facture INTEGER REFERENCES Facture(numeroFacture) NOT NULL
+ ticketPriseEnCharge INTEGER REFERENCES TicketPriseEnCharge(numeroTicket)UNIQUE NOT NULL,
+ facture INTEGER REFERENCES Facture(numeroFacture) UNIQUE NOT NULL
 );
 
 CREATE TABLE Reprise(
  numeroReprise INTEGER PRIMARY KEY,
  contrePartie VARCHAR,
- ticketPriseEnCharge INTEGER REFERENCES TicketPriseEnCharge(numeroTicket) NOT NULL,
- facture INTEGER REFERENCES Facture(numeroFacture) NOT NULL
+ ticketPriseEnCharge INTEGER REFERENCES TicketPriseEnCharge(numeroTicket) UNIQUE NOT NULL,
+ facture INTEGER REFERENCES Facture(numeroFacture) UNIQUE NOT NULL
 );
 
 CREATE TABLE Vente(
  numeroVente INTEGER PRIMARY KEY,
  installationRequise BOOLEAN,
- facture INTEGER REFERENCES Facture(numeroFacture) NOT NULL
+ facture INTEGER REFERENCES Facture(numeroFacture) UNIQUE NOT NULL
 );
 
 CREATE TABLE FactureOccurenceProduit(
@@ -146,21 +146,29 @@ CREATE TABLE BonDeCommande(
 );
 
 
+CREATE VIEW vueticketPriseEncharge(nbTicket) AS
+SELECT COUNT(DISTINCT Reparation.ticketPriseEnCharge)
+FROM Reparation, Reprise
+WHERE Reparation.ticketPriseEnCharge=Reprise.ticketPriseEnCharge;
+
+CREATE VIEW vueFacture(nbFacture) AS
+SELECT COUNT(DISTINCT Reparation.facture)
+FROM Reparation, Reprise, Vente
+WHERE Reparation.facture=Reprise.facture AND Reprise.facture=Vente.facture ;
+
+CREATE VIEW vueFactureOccureneProduit(nbFactureTotal, nbFactureAvecProduit) AS
+SELECT COUNT(FactureOccurenceProduit.facture), COUNT(Facture.numeroFacture)
+FROM FactureOccurenceProduit, Facture;
+
+CREATE VIEW vueFactureClient(nbFacture, nbFactureAvecClient) AS
+SELECT COUNT(Facture), COUNT(Facture.client)
+FROM Client, Facture
+WHERE Client.nom=Facture.client;
 
 
-Intersection(Restriction(Facture, reparation NULL), Restriction(Facture, reprise NULL), Restriction(Facture, vente NULL))={}
-ET ((reparation NULL AND vente NULL) OR (reparation NULL AND reprise NULL) OR (vente NULL AND reprise NULL)) 
 
-
-PROJECTION(FactureOccurenceProduit, facture) = PROJECTION(Facture, numeroFacture)
-
-PROJECTION(Client, nom) = PROJECTION(Facture,client)
 
 vPersonnel=Union(Projection(PersonnelAchat,idPersonnel,nom, prenom),Projection(PersonnelVente,idPersonnel,nom, prenom),Projection(PersonnelSAV,idPersonnel,nom, prenom), Projection(PersonnelReparation,idPersonnel,nom, prenom))
 
-Intersection(Restriction(TicketPriseEnCharge, reparation not NULL), Restriction(TicketPriseEnCharge, reprise not NULL))={}
-ET Intersection(Restriction(TicketPriseEnCharge, reparation NULL), Restriction(TicketPriseEnCharge, reprise NULL))={}
 
- CHECK (typeClient = Particulier OR typeClient = Professionnel)
  
- Verifier les cardinalites pour ticketPriseEnCharge et Facture
