@@ -36,8 +36,12 @@ TicketPriseEnCharge(#numeroTicket: integer, date : varchar, ticketTraité : bool
 
 BonDeCommande(#numeroBonDeCommande: integer, date : varchar, quantite : integer, prixUnitaire : float, bonTraité : boolean, produit=>Produit, personnelQuiCree=>PersonnelVente, personnelQuiValide=>PersonnelAchat) avec produit NOT NULL, personnelQuiCree NOT NULL, personnelQuiValide NOT NULL, prixUnitaire NOT NULL, quantite NOT NULL, prixUnitaire >0, quantite>0
 
-Reparation(#numeroReparation : integer, tempsPassé : float, materielUtilisé : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge NOT NULL, facture NOT NULL, temps passé NOT NULL
+Reparation(#numeroReparation : integer, tempsPassé : float, materielUtilisé : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge UNIQUE NOT NULL, facture UNIQUE NOT NULL, temps passé NOT NULL
 
-Reprise(#numeroReprise : integer, contrePartie : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge NOT NULL, facture NOT NULL
+Reprise(#numeroReprise : integer, contrePartie : varchar, ticketPriseEnCharge=>TicketPriseEnCharge, facture=>Facture) avec ticketPriseEnCharge UNIQUE NOT NULL, facture UNIQUE NOT NULL
 
-Vente(#numeroVente : integer, installationRequise : boolean, facture=>Facture) avec facture NOT NULL
+Vente(#numeroVente : integer, installationRequise : boolean, facture=>Facture) avec facture UNIQUE NOT NULL
+
+INTERSECTION(PROJECTION(Reparation, ticketPriseEnCharge), PROJECTION(Reprise, ticketPriseEnCharge))={}
+
+INTERSECTION(PROJECTION(Reparation, facture), PROJECTION(Reprise, facture), PROJECTION(Vente, facture))={}
