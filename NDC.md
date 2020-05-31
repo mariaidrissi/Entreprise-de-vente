@@ -82,8 +82,8 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - réalisée par un Personnel du service vente
 - possède un total sans remise
 - possède un numéro de facture
-- peut possèder un supplément si l'installation nécessite un spécialiste
-- peut possèder une remise à appliquer sur le total sans remise
+- peut possèder un supplément si l'installation nécessite un spécialiste, par default le supplement=0
+- peut possèder une remise à appliquer sur le total sans remise, par default la remise=0
 - possède une methode total final pour calculer le total avec remise et supplément si il y a 
 
 **Ticket de prise en charge**
