@@ -6,6 +6,8 @@ TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente
 CASCADE
 ;
 
+-- Creation table
+
 CREATE TABLE Marque(
  nom VARCHAR PRIMARY KEY
 );
@@ -89,15 +91,15 @@ CREATE TABLE Client(
  prenom VARCHAR NOT NULL,
  dateNaissance DATE NOT NULL,
  adresseMail VARCHAR,
- typeClient VARCHAR, 
+ typeClient VARCHAR NOT NULL, 
  CHECK (typeClient = 'Particulier' OR typeClient = 'Professionnel')
 );
 
 CREATE TABLE Facture(
  numeroFacture INTEGER PRIMARY KEY,
  totalSansRemise FLOAT NOT NULL, 
- remise FLOAT, 
- supplement FLOAT,  
+ remise FLOAT NOT NULL DEFAULT 0, 
+ supplement FLOAT NOT NULL DEFAULT 0,  
  client INTEGER REFERENCES Client(numeroCarteIdentite) NOT NULL,
  personnel INTEGER REFERENCES PersonnelVente(idPersonnel) NOT NULL
 );
@@ -144,6 +146,7 @@ CREATE TABLE BonDeCommande(
  CHECK (quantite>0)
 );
 
+-- Views 
 
 CREATE VIEW vueticketPriseEncharge(nbTicket) AS
 SELECT COUNT(DISTINCT Reparation.ticketPriseEnCharge)
@@ -151,18 +154,17 @@ FROM Reparation, Reprise
 WHERE Reparation.ticketPriseEnCharge=Reprise.ticketPriseEnCharge;
 
 CREATE VIEW vueFacture(nbFacture) AS
-SELECT COUNT(DISTINCT Reparation.facture)
+SELECT COUNT(*)
 FROM Reparation, Reprise, Vente
-WHERE Reparation.facture=Reprise.facture AND Reprise.facture=Vente.facture ;
+WHERE (Reparation.facture=Reprise.facture OR Reprise.facture=Vente.facture OR Reparation.facture=Vente.facture);
 
-CREATE VIEW vueFactureOccureneProduit(nbFactureTotal, nbFactureAvecProduit) AS
+CREATE VIEW vueFactureOccurenceProduit(nbFactureTotal, nbFactureAvecProduit) AS
 SELECT COUNT(FactureOccurenceProduit.facture), COUNT(Facture.numeroFacture)
 FROM FactureOccurenceProduit, Facture;
 
-CREATE VIEW vueFactureClient(nbFacture, nbFactureAvecClient) AS
-SELECT COUNT(Facture), COUNT(Facture.client)
-FROM Client, Facture
-WHERE Client.numeroCarteIdentite=Facture.client;
+CREATE VIEW vueFactureClient(nbClient, nbFactureAvecClient) AS
+SELECT COUNT (DISTINCT C.numeroCarteIdentite), COUNT(DISTINCT F.client)
+FROM Client C, Facture F;
 
 CREATE VIEW vuePersonnel(idPersonnel, nom, prenom) AS 
 SELECT idPersonnel, nom, prenom 
@@ -177,6 +179,8 @@ SELECT * FROM PersonnelReparation;
 CREATE VIEW vueTotalFinal(numeroFacture, total) AS 
 SELECT Facture.numeroFacture, Facture.totalSansRemise + Facture.remise + Facture.supplement
 FROM Facture;
+
+-- Insertions
 
 INSERT INTO Marque VALUES
 ('Sonic'),
@@ -275,3 +279,29 @@ INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, 
 (45678, 490, -10, 5, '372647289', 1334),
 (63729, 150, -20, 30, '245367283', 1334),
 (45254, 300, -10, 10, '456789938', 2337);
+
+-- Test du 0 par default de remise
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)VALUES
+(26724, 110, 50, '456132584', 1287),
+(12354, 900, 40, '753715738', 2347),
+(98463, 340, 10, '537537683', 2231);
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)VALUES
+(98479, 90, '456132584', 2231),
+(65283, 89, '753715738', 2347),
+(67294, 74, '537537683', 1287);
+
+INSERT INTO Reparation(numeroReparation, tempsPassé, ticketPriseEnCharge, facture) VALUES
+(53678, 0.4, 736, 98479);
+
+--Pour tester la vueTicketPriseEnCharge en mettant le meme numero de ticketPriseEnCharge
+
+INSERT INTO Reprise VALUES
+(67892, 'Remise de 50% à appliquer en caisse', 736, 65283);
+
+--Pour tester la vueFacture en mettant le meme numero de facture
+
+INSERT INTO Vente VALUES
+(456723, 'false', 98479);
+
