@@ -77,29 +77,28 @@ CREATE TABLE PersonnelReparation(
 
 CREATE TABLE TicketPriseEnCharge(
  numeroTicket INTEGER PRIMARY KEY,
- date VARCHAR NOT NULL,
+ date DATE NOT NULL,
  ticketTraité BOOLEAN,
  produit INTEGER REFERENCES OccurenceProduit(numeroDeSerie) NOT NULL,
  personnel INTEGER REFERENCES PersonnelSAV(idPersonnel) NOT NULL
 );
 
 CREATE TABLE Client(
- nom VARCHAR UNIQUE,
- prenom VARCHAR UNIQUE,
- dateNaissance VARCHAR UNIQUE,
+ numeroCarteIdentite INTEGER PRIMARY KEY,
+ nom VARCHAR NOT NULL,
+ prenom VARCHAR NOT NULL,
+ dateNaissance DATE NOT NULL,
  adresseMail VARCHAR,
  typeClient VARCHAR, 
- PRIMARY KEY (nom, prenom, dateNaissance), 
  CHECK (typeClient = 'Particulier' OR typeClient = 'Professionnel')
 );
 
 CREATE TABLE Facture(
  numeroFacture INTEGER PRIMARY KEY,
- totalsansRemise FLOAT NOT NULL, 
+ totalSansRemise FLOAT NOT NULL, 
  remise FLOAT, 
- supplement FLOAT, 
- totalFinal FLOAT NOT NULL, 
- client VARCHAR REFERENCES Client(nom) NOT NULL,
+ supplement FLOAT,  
+ client INTEGER REFERENCES Client(numeroCarteIdentite) NOT NULL,
  personnel INTEGER REFERENCES PersonnelVente(idPersonnel) NOT NULL
 );
 
@@ -134,7 +133,7 @@ CREATE TABLE FactureOccurenceProduit(
 
 CREATE TABLE BonDeCommande(
  numeroBonDeCommande INTEGER PRIMARY KEY,
- date VARCHAR NOT NULL,
+ date DATE NOT NULL,
  quantite INTEGER NOT NULL,
  prixUnitaire FLOAT NOT NULL,
  bonTraité BOOLEAN, 
@@ -163,7 +162,7 @@ FROM FactureOccurenceProduit, Facture;
 CREATE VIEW vueFactureClient(nbFacture, nbFactureAvecClient) AS
 SELECT COUNT(Facture), COUNT(Facture.client)
 FROM Client, Facture
-WHERE Client.nom=Facture.client;
+WHERE Client.numeroCarteIdentite=Facture.client;
 
 CREATE VIEW vuePersonnel(idPersonnel, nom, prenom) AS 
 SELECT idPersonnel, nom, prenom 
@@ -174,6 +173,10 @@ UNION
 SELECT * FROM PersonnelSAV 
 UNION 
 SELECT * FROM PersonnelReparation;
+
+CREATE VIEW vueTotalFinal(numeroFacture, total) AS 
+SELECT Facture.numeroFacture, Facture.totalSansRemise + Facture.remise + Facture.supplement
+FROM Facture;
 
 INSERT INTO Marque VALUES
 ('Sonic'),
@@ -252,3 +255,23 @@ INSERT INTO PersonnelReparation VALUES
 (2947, 'Marrec', 'Florian'),
 (4972, 'Perrier', 'Eloise'),
 (4264, 'Galice', 'Maeva');
+
+INSERT INTO TicketPriseEnCharge VALUES
+(736, '2020-02-09', 'true', 8347836, 2413),
+(273, '2020-04-09', 'true', 8347836, 2413),
+(372, '2020-06-09', 'true', 7785385, 1342),
+(376, '2020-06-10', 'false', 3276433, 2134)
+;
+
+INSERT INTO Client VALUES
+(372647289,'Idrissi', 'Rita', '1990-06-10', 'idrissi.rita@lilo.org', 'Particulier'),
+(245367283,'Idrissi', 'Rayane', '2008-06-10', 'idrissi.rayane@lilo.org', 'Particulier'),
+(456789938, 'Brasseur', 'Solene', '1995-06-10', 'brasseur.sln@lilo.org', 'Particulier'),
+(456132584, 'Lafond', 'Colin', '1994-03-12', 'lfd.colin@lilo.org', 'Particulier'),
+(753715738, 'Bond', 'James', '1998-06-10', 'bond.007@lilo.org', 'Professionnel'),
+(537537683, 'Taylor', 'Vanessa', '1998-05-03', 'vanessa.taylor@lilo.org', 'Professionnel');
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, personnel)VALUES
+(45678, 490, -10, 5, '372647289', 1334),
+(63729, 150, -20, 30, '245367283', 1334),
+(45254, 300, -10, 10, '456789938', 2337);
