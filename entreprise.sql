@@ -165,10 +165,12 @@ SELECT COUNT(Facture), COUNT(Facture.client)
 FROM Client, Facture
 WHERE Client.nom=Facture.client;
 
-
-
-
-vPersonnel=Union(Projection(PersonnelAchat,idPersonnel,nom, prenom),Projection(PersonnelVente,idPersonnel,nom, prenom),Projection(PersonnelSAV,idPersonnel,nom, prenom), Projection(PersonnelReparation,idPersonnel,nom, prenom))
-
-
- 
+CREATE VIEW vuePersonnel(idPersonnel, nom, prenom) AS 
+SELECT idPersonnel, nom, prenom 
+FROM PersonnelAchat 
+UNION 
+SELECT * FROM PersonnelVente 
+UNION 
+SELECT * FROM PersonnelSAV 
+UNION 
+SELECT * FROM PersonnelReparation;
