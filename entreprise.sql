@@ -201,6 +201,54 @@ INSERT INTO SousCategorie VALUES
 ('Cuisson', 'Electromenager'),
 ('Aspirateur et nettoyeur', 'Electromenager');
 
+INSERT INTO Fournisseur VALUES
+('GeneralElectromenager'),
+('CuisinePourTous'),
+('JardinProcheDeVous'),
+('Telephonie'),
+('Saphir');
+
 INSERT INTO Produit VALUES 
 ('Lave linge WD 80 K 5 B 10', 600, 'Lave linge et secheur frontal', 'true', 8,	'Samsung', 'Aspirateur et nettoyeur'),
-('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson');
+('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson'),
+('Plaque induction PUJ631BB1E', 500, '4 plaques inductions', 'false', 9, 'Bosch', 'Cuisson');
+
+INSERT INTO ProduitCompatibleProduit VALUES
+('Four encastrable pyrolyse HB675G0S1F iQ700','Plaque induction PUJ631BB1E');
+
+INSERT INTO OccurenceProduit VALUES 
+(8347836, 590, 'Lave linge WD 80 K 5 B 10', 'GeneralElectromenager'), 
+(7785385, 590, 'Lave linge WD 80 K 5 B 10', 'GeneralElectromenager'),
+(2723759, 590, 'Lave linge WD 80 K 5 B 10', 'Saphir'),
+(3276433, 439, 'Four encastrable pyrolyse HB675G0S1F iQ700', 'GeneralElectromenager'), 
+(3397448, 439, 'Lave linge WD 80 K 5 B 10', 'Saphir'),
+(7457484, 439, 'Lave linge WD 80 K 5 B 10', 'GeneralElectromenager');
+
+
+INSERT INTO PersonnelAchat VALUES
+(2637, 'Idrissi', 'Maria'),
+(1383, 'Dupont', 'Maria'),
+(0173, 'Dupont', 'Christophe'),
+(3726, 'Brasseur', 'Marine'),
+(2938, 'Dehaas', 'Marguerite');
+
+INSERT INTO PersonnelVente VALUES
+(1334, 'Jolicoeur', 'Christine'),
+(2337, 'Dufourg', 'Camille'),
+(2231, 'Perez', 'Alice'),
+(2347, 'Lopez', 'Alex'),
+(1287, 'Attache', 'William');
+
+INSERT INTO PersonnelSAV VALUES
+(2413, 'Lopez', 'Emmy'),
+(1342, 'Dupuis', 'Eddy'),
+(2134, 'Leroux', 'Paula'),
+(4453, 'Picard', 'Simon'),
+(2314, 'Thomas', 'Will');
+
+INSERT INTO PersonnelReparation VALUES
+(2484, 'Lacroix', 'Marie'),
+(5874, 'Fournier', 'Eric'),
+(2947, 'Marrec', 'Florian'),
+(4972, 'Perrier', 'Eloise'),
+(4264, 'Galice', 'Maeva');
