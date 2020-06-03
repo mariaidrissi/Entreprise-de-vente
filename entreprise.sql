@@ -17,10 +17,12 @@ CREATE TABLE Categorie(
 );
 
 CREATE TABLE SousCategorie(
- nom VARCHAR PRIMARY KEY,
- categorie VARCHAR, 
- FOREIGN KEY(categorie) REFERENCES Categorie(nom)
+ nom VARCHAR,
+ categorie VARCHAR,
+ PRIMARY KEY (nom, categorie),
+ FOREIGN KEY (categorie) REFERENCES Categorie(nom)
 );
+
 
 CREATE TABLE Produit(
   reference VARCHAR PRIMARY KEY,
@@ -29,7 +31,9 @@ CREATE TABLE Produit(
   extensionGarantie BOOLEAN NOT NULL,
   consommation INTEGER, 
   marque VARCHAR REFERENCES Marque(nom) NOT NULL,
-  sousCategorie VARCHAR REFERENCES SousCategorie(nom) NOT NULL,
+  sousCategorie VARCHAR,
+  categorie VARCHAR,
+  FOREIGN KEY (sousCategorie, categorie) REFERENCES SousCategorie (nom, categorie),
   CHECK (prixReference >0)
 );
 
@@ -206,8 +210,12 @@ INSERT INTO SousCategorie VALUES
 ('Jardinage', 'Jardin'),
 ('Ordinateur', 'Informatique'),
 ('Telephone', 'Informatique'),
+('Television', 'Informatique'),
 ('Cuisson', 'Electromenager'),
 ('Aspirateur et nettoyeur', 'Electromenager');
+
+
+INSERT INTO SousCategorie VALUES ('Bricolage', 'Informatique');
 
 INSERT INTO Fournisseur VALUES
 ('GeneralElectromenager'),
@@ -217,11 +225,11 @@ INSERT INTO Fournisseur VALUES
 ('Saphir');
 
 INSERT INTO Produit VALUES 
-('Lave linge WD 80 K 5 B 10', 600, 'Lave linge et secheur frontal', 'true', 8,	'Samsung', 'Aspirateur et nettoyeur'),
-('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson'),
-('Plaque induction PUJ631BB1E', 500, '4 plaques inductions', 'false', 9, 'Bosch', 'Cuisson'),
-('Television 27 DH YT', 290, 'Ecran plat Full HD 4K', 'true', 4, 'LG', 'Cuisson'),
-('Frigo AJ 64 87', 900, 'Frigo avec compartiment congélateur', 'true', 13, 'Bosch', 'Gros Electromenager');
+('Lave linge WD 80 K 5 B 10', 600, 'Lave linge et secheur frontal', 'true', 8,	'Samsung', 'Aspirateur et nettoyeur', 'Electromenager'),
+('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson', 'Electromenager'),
+('Plaque induction PUJ631BB1E', 500, '4 plaques inductions', 'false', 9, 'Bosch', 'Cuisson', 'Electromenager'),
+('Television 27 DH YT', 290, 'Ecran plat Full HD 4K', 'true', 4, 'LG', 'Television','Informatique'),
+('Frigo AJ 64 87', 900, 'Frigo avec compartiment congélateur', 'true', 13, 'Bosch', 'Gros Electromenager', 'Cuisine');
 
 INSERT INTO ProduitCompatibleProduit VALUES
 ('Four encastrable pyrolyse HB675G0S1F iQ700','Plaque induction PUJ631BB1E');
