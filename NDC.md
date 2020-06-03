@@ -164,3 +164,4 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Une occurence peut etre dans plusieurs factures, car cela peut etre une facture d'achat ou de reprise ou de reparation
 - Une facture est soi une facture de vente, de reprise ou de reparation
 - Deux sous categories peuvent avoir le même nom, tant qu'elles font pas partie de la même catégorie
+- Le prix unitaire dans le bon de Commande ne depend pas du produit car il peut etre negocie par le service achat, donc le prix unitaire depend du bon de commande
