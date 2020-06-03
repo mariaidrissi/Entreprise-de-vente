@@ -25,7 +25,7 @@ class Categorie {
 }
 
 class SousCategorie {
-	nom : string {key}
+	nom : string {local key}
 }
 
 SousCategorie "*" --* Categorie
