@@ -45,3 +45,38 @@ Vente(#numeroVente : integer, installationRequise : boolean, facture=>Facture) a
 INTERSECTION(PROJECTION(Reparation, ticketPriseEnCharge), PROJECTION(Reprise, ticketPriseEnCharge))={}
 
 INTERSECTION(PROJECTION(Reparation, facture), PROJECTION(Reprise, facture), PROJECTION(Vente, facture))={}
+
+Normalisation :
+
+Produit.reference → prixReference, description, extensionGarantie, consommation, marque, sousCategorie
+
+OccurenceProduit.numeroDeSerie  →  prixAffiche, referenceProduit, fournisseur
+
+Facture.numeroFacture   →  totalsansRemise, remise, supplement, client, personnel
+
+Client.numeroCarteIdentite   →  nom, prenom, dateNaissance, adresseMail, typeClient
+
+PersonnelAchat.idPersonnel  →  nom, prenom 
+
+PersonnelVente.idPersonnel  →  nom, prenom 
+
+PersonnelSAV.idPersonnel  →  nom, prenom 
+
+PersonnelReparation.idPersonnel  →  nom, prenom 
+
+TicketPriseEnCharge.numeroTicket →  date, ticketTraité, produit, personnel
+
+BonDeCommande.numeroBonDeCommande →  date, quantite, prixUnitaire, bonTraité : boolean, produit=>Produit, personnelQuiCree, personnelQuiValide
+
+Reparation.numeroReparation → tempsPassé, materielUtilisé, ticketPriseEnCharge, facture
+
+Reprise.numeroReprise → contrePartie, ticketPriseEnCharge, facture
+
+Vente.numeroVente → installationRequise, facture
+
+Le schéma est en BCNF car :
+
+- 1 NF car les attributs sont atomique et toutes les tables ont une clé
+- 2 NF car il n'y a pas d'attribut non clé qui dependent d'une partie d'une clé
+- 3 NF car tous les attributs non clé dependent que de clé candidates
+- BCNF car toutes les dependances fonctionnelles elementaires sont de la forme K → E où K est une clé
