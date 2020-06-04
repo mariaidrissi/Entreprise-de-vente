@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS
-Produit, ProduitCompatibleProduit, Marque, Categorie, SousCategorie,
+Produit, ProduitCompatibleProduit, Marque,
 OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, Client, 
 PersonnelAchat, PersonnelVente, PersonnelSAV,PersonnelReparation, 
 TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente
@@ -12,18 +12,6 @@ CREATE TABLE Marque(
  nom VARCHAR PRIMARY KEY
 );
 
-CREATE TABLE Categorie(
- nom VARCHAR PRIMARY KEY
-);
-
-CREATE TABLE SousCategorie(
- nom VARCHAR,
- categorie VARCHAR,
- PRIMARY KEY (nom, categorie),
- FOREIGN KEY (categorie) REFERENCES Categorie(nom)
-);
-
-
 CREATE TABLE Produit(
   reference VARCHAR PRIMARY KEY,
   prixReference FLOAT NOT NULL,
@@ -31,9 +19,7 @@ CREATE TABLE Produit(
   extensionGarantie BOOLEAN NOT NULL,
   consommation INTEGER, 
   marque VARCHAR REFERENCES Marque(nom) NOT NULL,
-  sousCategorie VARCHAR,
-  categorie VARCHAR,
-  FOREIGN KEY (sousCategorie, categorie) REFERENCES SousCategorie (nom, categorie),
+  sousCategorie JSON NOT NULL, 
   CHECK (prixReference >0)
 );
 
@@ -89,23 +75,14 @@ CREATE TABLE TicketPriseEnCharge(
  personnel INTEGER REFERENCES PersonnelSAV(idPersonnel) NOT NULL
 );
 
-CREATE TABLE Client(
- numeroCarteIdentite INTEGER PRIMARY KEY,
- nom VARCHAR NOT NULL,
- prenom VARCHAR NOT NULL,
- dateNaissance DATE NOT NULL,
- adresseMail VARCHAR,
- typeClient VARCHAR NOT NULL, 
- CHECK (typeClient = 'Particulier' OR typeClient = 'Professionnel')
-);
 
 CREATE TABLE Facture(
  numeroFacture INTEGER PRIMARY KEY,
  totalSansRemise FLOAT NOT NULL, 
  remise FLOAT NOT NULL DEFAULT 0, 
  supplement FLOAT NOT NULL DEFAULT 0,  
- client INTEGER REFERENCES Client(numeroCarteIdentite) NOT NULL,
- personnel INTEGER REFERENCES PersonnelVente(idPersonnel) NOT NULL
+ client JSON NOT NULL,
+ personnel INTEGER REFERENCES PersonnelVente(idPersonnel) NOT NULL 
 );
 
 CREATE TABLE Reparation(
@@ -150,6 +127,7 @@ CREATE TABLE BonDeCommande(
  CHECK (quantite>0)
 );
 
+
 -- Views 
 
 CREATE VIEW vueticketPriseEncharge(nbTicket) AS
@@ -165,10 +143,6 @@ WHERE (Reparation.facture=Reprise.facture OR Reprise.facture=Vente.facture OR Re
 CREATE VIEW vueFactureOccurenceProduit(nbFactureAvecProduit, nbFactureTotal) AS
 SELECT COUNT(DISTINCT FactureOccurenceProduit.facture), COUNT(DISTINCT Facture.numeroFacture)
 FROM FactureOccurenceProduit, Facture;
-
-CREATE VIEW vueFactureClient(nbClient, nbFactureAvecClient) AS
-SELECT COUNT (DISTINCT C.numeroCarteIdentite), COUNT(DISTINCT F.client)
-FROM Client C, Facture F;
 
 CREATE VIEW vuePersonnel(idPersonnel, nom, prenom) AS 
 SELECT idPersonnel, nom, prenom 
@@ -186,36 +160,15 @@ FROM Facture;
 
 -- Insertions
 
+
 INSERT INTO Marque VALUES
 ('Sonic'),
 ('LG'),
 ('Samsung'),
 ('Apple'),
-('Bosch');
+('Bosch'), 
+('Brico');
 
-INSERT INTO Categorie VALUES
-('Cuisine'),
-('Chambre'),
-('Jardin'),
-('Informatique'),
-('Electromenager');
-
-INSERT INTO SousCategorie VALUES
-('Petit Electromenager', 'Cuisine'),
-('Ustensile', 'Cuisine'),
-('Gros Electromenager', 'Cuisine'),
-('Literie', 'Chambre'),
-('Lampes', 'Chambre'),
-('Bricolage', 'Jardin'),
-('Jardinage', 'Jardin'),
-('Ordinateur', 'Informatique'),
-('Telephone', 'Informatique'),
-('Television', 'Informatique'),
-('Cuisson', 'Electromenager'),
-('Aspirateur et nettoyeur', 'Electromenager');
-
-
-INSERT INTO SousCategorie VALUES ('Bricolage', 'Informatique');
 
 INSERT INTO Fournisseur VALUES
 ('GeneralElectromenager'),
@@ -224,12 +177,102 @@ INSERT INTO Fournisseur VALUES
 ('Telephonie'),
 ('Saphir');
 
-INSERT INTO Produit VALUES 
-('Lave linge WD 80 K 5 B 10', 600, 'Lave linge et secheur frontal', 'true', 8,	'Samsung', 'Aspirateur et nettoyeur', 'Electromenager'),
-('Four encastrable pyrolyse HB675G0S1F iQ700', 400, 'Four haute intensité', 'true', 10, 'Bosch', 'Cuisson', 'Electromenager'),
-('Plaque induction PUJ631BB1E', 500, '4 plaques inductions', 'false', 9, 'Bosch', 'Cuisson', 'Electromenager'),
-('Television 27 DH YT', 290, 'Ecran plat Full HD 4K', 'true', 4, 'LG', 'Television','Informatique'),
-('Frigo AJ 64 87', 900, 'Frigo avec compartiment congélateur', 'true', 13, 'Bosch', 'Gros Electromenager', 'Cuisine');
+INSERT INTO Produit 
+VALUES 
+(
+'Lave linge WD 80 K 5 B 10',
+600, 
+'Lave linge et secheur frontal', 
+'true', 
+8,	
+'Samsung', 
+'{"categorie":"Electromenager","sousCategorie":"Aspirateur et nettoyeur"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Four encastrable pyrolyse HB675G0S1F iQ700', 
+400, 
+'Four haute intensité', 
+'true', 
+10, 
+'Bosch', 
+'{"categorie":"Electromenager","sousCategorie" : "Cuisson"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Plaque induction PUJ631BB1E', 
+500, 
+'4 plaques inductions', 
+'false', 
+9, 
+'Bosch',  
+'{"categorie":"Electromenager","sousCategorie" : "Cuisson"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Television 27 DH YT', 
+290, 
+'Ecran plat Full HD 4K', 
+'true', 
+4, 
+'LG',  
+'{"categorie":"Informatique","sousCategorie" : "Television"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Boite à outils 34 ER 78', 
+150, 
+'Tres pratique pour vous depanner en cas de soucis informatique', 
+'true', 
+0, 
+'Brico',  
+'{"categorie":"Informatique","sousCategorie" : "Bricolage"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Secateur 56 HT 76', 
+60, 
+'Secateur indispensable pour votre bricolage dans votre jardin', 
+'true', 
+0, 
+'Brico', 
+'{"categorie": "Jardin", "sousCategorie" : "Bricolage"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Tondeuse 74 HG TH', 
+150, 
+'Tondeuse simple à utiliser', 
+'true', 
+6, 
+'Bosch', 
+'{"categorie": "Jardin", "sousCategorie" : "Jardinage"}'
+);
+
+INSERT INTO Produit 
+VALUES 
+(
+'Frigo AJ 64 87', 
+900, 
+'Frigo avec compartiment congélateur', 
+'true', 
+13, 
+'Bosch', 
+'{"categorie": "Cuisine", "sousCategorie" : "Gros Electromenager"}'
+);
+
 
 INSERT INTO ProduitCompatibleProduit VALUES
 ('Four encastrable pyrolyse HB675G0S1F iQ700','Plaque induction PUJ631BB1E');
@@ -280,34 +323,125 @@ INSERT INTO TicketPriseEnCharge VALUES
 (372, '2020-06-09', 'true', 7785385, 1342),
 (376, '2020-06-10', 'false', 3276433, 2134);
 
-INSERT INTO Client VALUES
-(372647289,'Idrissi', 'Rita', '1990-06-10', 'idrissi.rita@lilo.org', 'Particulier'),
-(245367283,'Idrissi', 'Rayane', '2008-06-10', 'idrissi.rayane@lilo.org', 'Particulier'),
-(456789938, 'Brasseur', 'Solene', '1995-06-10', 'brasseur.sln@lilo.org', 'Particulier'),
-(456132584, 'Lafond', 'Colin', '1994-03-12', 'lfd.colin@lilo.org', 'Particulier'),
-(753715738, 'Bond', 'James', '1998-06-10', 'bond.007@lilo.org', 'Professionnel'),
-(537537683, 'Taylor', 'Vanessa', '1998-05-03', 'vanessa.taylor@lilo.org', 'Professionnel'),
-(467846776, 'Bass', 'Chuck', '1991-05-03', 'chuck.bass@lilo.org', 'Professionnel');
+INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, personnel)
+VALUES
+(
+45678, 
+590, 
+-10, 
+5,  
+'{"numeroCarteIdentite" : "372647289","nom" : "Idrissi", "prenom" : "Rita",
+"dateNaissance" : "1990-06-10", "adresseMail" : "idrissi.rita@lilo.org", "typeClient" : "Particulier"}', 
+1334
+);
 
-INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, personnel)VALUES
-(45678, 590, -10, 5, '372647289', 1334),
-(63729, 439, -20, 30, '245367283', 1334),
-(45254, 300, -10, 10, '456789938', 2337);
+INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, personnel)
+VALUES
+(
+63729, 
+439, 
+-20, 
+30, 
+'{"numeroCarteIdentite" : "245367283", "nom" : "Idrissi", "prenom" : "Rayane",
+"dateNaissance" : "2008-06-10", "adresseMail" : "idrissi.rayane@lilo.org",
+"typeClient" : "Particulier"}',
+1334
+);
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, remise, supplement, client, personnel)
+VALUES
+(
+45254, 
+300, 
+-10, 
+10, 
+'{"numeroCarteIdentite" : "456789938", "nom" : "Brasseur", "prenom" : "Solene",
+"dateNaissance" : "1995-06-10", "adresseMail" : "brasseur.sln@lilo.org",
+"typeClient" : "Particulier"}',
+2337
+);
 
 -- Test du 0 par default de remise
 
-INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)VALUES
-(26724, 505, 50, '456132584', 1287),
-(12354, 910, 40, '753715738', 2347), 
-(19875, 590, 40, '537537683', 2347), 
-(54324, 590, 0, '467846776', 2347);
+INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)
+VALUES
+(
+26724, 
+505, 
+50, 
+'{"numeroCarteIdentite" : "456132584", "nom" : "Lafond", "prenom" : "Colin",
+"dateNaissance" : "1994-03-12", "adresseMail" : "lfd.colin@lilo.org",
+"typeClient" : "Particulier"}', 
+1287
+);
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)
+VALUES
+(
+12354, 
+910, 
+40,  
+'{"numeroCarteIdentite" : "753715738", "nom" : "Bond", "prenom" : "James", "dateNaissance" : "1998-06-10", "adresseMail" : "bond.007@lilo.org", 
+"typeClient" : "Professionnel"}',
+2347
+); 
+ 
+INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)
+VALUES
+(19875, 
+590, 
+40, 
+'{"numeroCarteIdentite" : "537537683", "nom" : "Taylor", "prenom" : "Vanessa",
+"dateNaissance" : "1998-05-03", "adresseMail" : "vanessa.taylor@lilo.org",
+"typeClient" : "Professionnel"}', 
+2347
+);
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, supplement, client, personnel)
+VALUES
+(
+54324, 
+590, 
+0, 
+'{"numeroCarteIdentite" : "456789938", "nom" : "Brasseur", "prenom" : "Solene",
+"dateNaissance" : "1995-06-10", "adresseMail" : "brasseur.sln@lilo.org", "typeClient" : "Particulier"}', 
+2347
+);
 
 -- Test du 0 par default de supplement
 
-INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)VALUES
-(98479, 90, '537537683', 2231),
-(65283, 89, '467846776', 2347),
-(32415, 0, '245367283', 1287);
+INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)
+VALUES
+(
+98479, 
+90, 
+'{"numeroCarteIdentite" : "537537683", "nom" : "Taylor", "prenom" : "Vanessa",
+"dateNaissance" : "1998-05-03", "adresseMail" : "vanessa.taylor@lilo.org",
+"typeClient" : "Professionnel"}',
+ 2231
+);
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)
+VALUES
+(
+65283, 
+89, 
+'{"numeroCarteIdentite" : "467846776", "nom" : "Bass", "prenom" : "Chuck",
+"dateNaissance" : "1991-05-03", "adresseMail" : "chuck.bass@lilo.org",
+"typeClient" : "Professionnel"}', 
+2347
+);
+
+INSERT INTO Facture(numeroFacture, totalsansRemise, client, personnel)
+VALUES
+(
+32415, 
+0, 
+'{"numeroCarteIdentite" : "245367283", "nom" : "Idrissi", "prenom" : "Rayane",
+"dateNaissance" : "2008-06-10", "adresseMail" : "idrissi.rayane@lilo.org",
+"typeClient" : "Particulier"}', 
+1287
+);
 
 INSERT INTO Reparation(numeroReparation, tempsPassé, ticketPriseEnCharge, facture) VALUES
 (53678, 0.4, 736, 98479),
