@@ -1,26 +1,18 @@
-Produit(#reference : varchar, prixReference : float, description : varchar, extensionGarantie : boolean, consommation : integer, marque=>Marque, #sousCategorie=>SousCategorie) avec prixReference NOT NULL, prixReference>0, description NOT NULL, marque NOT NULL, sousCategorie NOT NULL, extensionGarantie NOT NULL
+Produit(#reference : varchar, prixReference : float, description : varchar, extensionGarantie : boolean, consommation : integer, marque=>Marque, sousCategorie : JSON) avec prixReference NOT NULL, prixReference>0, description NOT NULL, marque NOT NULL, sousCategorie NOT NULL, extensionGarantie NOT NULL
 
 ProduitCompatibleProduit(#Produit1=>Produit, #Produit2=>Produit)
 
 Marque(#nom : varchar)
 
-Categorie(#nom : varchar) 
-
-SousCategorie(#nom : varchar, #categorie=>Categorie) 
-
 OccurenceProduit(#numeroDeSerie : integer, prixAffiche : float, referenceProduit=>Produit, fournisseur=>Fournisseur) avec prixAffiche NOT NULL, prixAffiche>0, referenceProduit NOT NULL, fournisseur NOT NULL
 
-Facture(#numeroFacture : integer, totalsansRemise : float, remise : float, supplement : float, client=>Client, personnel=>PersonnelVente) avec totalsansRemise NOT NULL, remise NOT NULL, supplement NOT NULL, client NOT NULL, personnel NOT NULL
+Facture(#numeroFacture : integer, totalsansRemise : float, remise : float, supplement : float, client : JSON, personnel=>PersonnelVente) avec totalsansRemise NOT NULL, remise NOT NULL, supplement NOT NULL, client NOT NULL, personnel NOT NULL
 
 FactureOccurenceProduit(#facture=>Facture, #produit=>OccurenceProduit)
 
 PROJECTION(FactureOccurenceProduit, facture) = PROJECTION(Facture, numeroFacture)
 
 Fournisseur(#nom : varchar)
-
-Client(#numeroCarteIdentite :integer, nom : varchar, prenom : varchar, dateNaissance : varchar, adresseMail : varchar, typeClient : varchar) avec nom NOT NULL, prenom NOT NULL, dateNaissance NOT NULL, typeClient=Professionel OR typeClient=Particulier
-
-PROJECTION(Client, numeroCarteIdenite) = PROJECTION(Facture,client)
 
 PersonnelAchat(#idPersonnel: integer, nom : varchar, prenom : varchar) avec nom NOT NULL, prenom NOT NULL
 
@@ -53,8 +45,6 @@ Produit.reference → prixReference, description, extensionGarantie, consommatio
 OccurenceProduit.numeroDeSerie  →  prixAffiche, referenceProduit, fournisseur
 
 Facture.numeroFacture   →  totalsansRemise, remise, supplement, client, personnel
-
-Client.numeroCarteIdentite   →  nom, prenom, dateNaissance, adresseMail, typeClient
 
 PersonnelAchat.idPersonnel  →  nom, prenom 
 
