@@ -51,19 +51,20 @@ class Facture {
   totalsansRemise : float 
   remise : float
   supplement : float
+  client : Client
   totalFinal() : float
 }
 
 
-class Client { 
-  numeroCarteIdentite :integer {key}
+class Client <<dataType>> { 
+  numeroCarteIdentite :integer 
   nom : string 
   prenom : string 
   dateNaissance : string 
-  adresseMail [0..1]: string
+  adresseMail : string
   typeClient : ['Professionel', 'Particulier']
 }
-Facture "1..*" -- "1" Client : paye <
+
 
 Facture "0..*" -- "1..*" OccurenceProduit : contient >
 
