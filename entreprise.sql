@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS
 Produit, ProduitCompatibleProduit, Marque,
-OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, Client, 
+OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, 
 PersonnelAchat, PersonnelVente, PersonnelSAV,PersonnelReparation, 
-TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente
+TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente, ExpositionTemporaire
 CASCADE
 ;
 
@@ -157,6 +157,88 @@ SELECT * FROM PersonnelReparation;
 CREATE VIEW vueTotalFinal(numeroFacture, total) AS 
 SELECT Facture.numeroFacture, Facture.totalSansRemise + Facture.remise + Facture.supplement
 FROM Facture;
+
+CREATE VIEW vueTotalPanierMoyen(totalMoyenFacture) AS
+SELECT avg(total) FROM vueTotalFinal;
+
+CREATE VIEW vueTotalRemiseParVendeur(idPersonnel, nomPersonnel, Totalremise) AS
+SELECT Facture.personnel, PersonnelVente.nom, sum(Facture.remise)
+FROM Facture, PersonnelVente
+WHERE Facture.personnel=PersonnelVente.idPersonnel
+GROUP BY Facture.personnel, PersonnelVente.idPersonnel;
+
+CREATE VIEW vueProduitLesPlusVendus(referenceProduit, nombreDeVente) AS
+SELECT P.reference, COUNT(*) 
+FROM Vente V, FactureOccurenceProduit FOP, OccurenceProduit OP, Produit P
+WHERE V.facture=FOP.Facture AND FOP.Produit=OP.numeroDeSerie AND OP.referenceProduit=P.reference
+GROUP BY P.reference;
+
+CREATE VIEW vueBestSeller(referenceProduitLePlusVendu, nombreDeVente) AS
+WITH vueProduitLesPlusVendus 
+AS
+(
+SELECT *, RANK ( ) OVER (ORDER BY nombreDeVente DESC) AS RANG
+FROM vueProduitLesPlusVendus
+)
+SELECT referenceProduit, nombreDeVente
+FROM vueProduitLesPlusVendus 
+WHERE RANG=1;
+
+CREATE VIEW vueProduitsLesPlusDeRepares(referenceProduit, nombreDePanne) AS
+SELECT P.reference, COUNT(*) 
+FROM Reparation R, FactureOccurenceProduit FOP, OccurenceProduit OP, Produit P
+WHERE R.facture=FOP.Facture AND FOP.Produit=OP.numeroDeSerie AND OP.referenceProduit=P.reference
+GROUP BY P.reference;
+
+CREATE VIEW vuePireProduit(referenceProduitLePlusRepare, nombreDeReparation) AS
+WITH vueProduitsLesPlusDeRepares 
+AS
+(
+SELECT *, RANK ( ) OVER (ORDER BY nombreDePanne DESC) AS RANG
+FROM vueProduitsLesPlusDeRepares
+)
+SELECT referenceProduit, nombreDePanne
+FROM vueProduitsLesPlusDeRepares 
+WHERE RANG=1;
+
+CREATE VIEW vueTOPPersonnelVente(idPersonnel, nomPersonnel, nombreDeFacture) AS
+SELECT Facture.personnel, PersonnelVente.nom, COUNT(*)
+FROM Facture, PersonnelVente
+WHERE Facture.personnel=PersonnelVente.idPersonnel
+GROUP BY Facture.personnel, PersonnelVente.idPersonnel;
+
+CREATE VIEW vueMeilleurPersonnelVente(idPersonnel, nomPersonnel, nombreDeFacture) AS
+WITH vueTOPPersonnelVente 
+AS
+(
+SELECT *, RANK ( ) OVER (ORDER BY nombreDeFacture DESC) AS RANG
+FROM vueTOPPersonnelVente
+)
+SELECT idPersonnel, nomPersonnel, nombreDeFacture
+FROM vueTOPPersonnelVente 
+WHERE RANG=1;
+
+
+CREATE VIEW vueClient(numeroCarteIdentite, nom, prenom, dateNaissance, adresseMail, typeClient) AS
+SELECT CAST(c->>'numeroCarteIdentite' AS INTEGER) AS numeroCarteIdentite, c->>'nom' AS nom, c->>'prenom' AS prenom, 
+c->>'dateNaissance' AS dateNaissance, c->>'adresseMail' AS adresseMail, c->>'typeClient' AS typeClient
+FROM Facture F, JSON_ARRAY_ELEMENTS(F.client) c;
+
+CREATE VIEW vueClientFacture(nombreFacture, nomClient, prenomClient) AS
+SELECT COUNT(*), nom, prenom
+FROM vueClient
+GROUP BY nom, prenom;
+
+CREATE VIEW vueClientLePlusFidele(nomClient, prenomClient, nombreDeFacture) AS
+WITH vueClientFacture 
+AS
+(
+SELECT *, RANK ( ) OVER (ORDER BY nombreFacture DESC) AS RANG
+FROM vueClientFacture
+)
+SELECT nomClient, prenomClient, nombreFacture 
+FROM vueClientFacture 
+WHERE RANG=1;
 
 -- Insertions
 
@@ -330,8 +412,8 @@ VALUES
 590, 
 -10, 
 5,  
-'{"numeroCarteIdentite" : "372647289","nom" : "Idrissi", "prenom" : "Rita",
-"dateNaissance" : "1990-06-10", "adresseMail" : "idrissi.rita@lilo.org", "typeClient" : "Particulier"}', 
+'[{"numeroCarteIdentite" : "372647289","nom" : "Idrissi", "prenom" : "Rita",
+"dateNaissance" : "1990-06-10", "adresseMail" : "idrissi.rita@lilo.org", "typeClient" : "Particulier"}]', 
 1334
 );
 
@@ -342,9 +424,9 @@ VALUES
 439, 
 -20, 
 30, 
-'{"numeroCarteIdentite" : "245367283", "nom" : "Idrissi", "prenom" : "Rayane",
+'[{"numeroCarteIdentite" : "245367283", "nom" : "Idrissi", "prenom" : "Rayane",
 "dateNaissance" : "2008-06-10", "adresseMail" : "idrissi.rayane@lilo.org",
-"typeClient" : "Particulier"}',
+"typeClient" : "Particulier"}]',
 1334
 );
 
@@ -355,9 +437,9 @@ VALUES
 300, 
 -10, 
 10, 
-'{"numeroCarteIdentite" : "456789938", "nom" : "Brasseur", "prenom" : "Solene",
+'[{"numeroCarteIdentite" : "456789938", "nom" : "Brasseur", "prenom" : "Solene",
 "dateNaissance" : "1995-06-10", "adresseMail" : "brasseur.sln@lilo.org",
-"typeClient" : "Particulier"}',
+"typeClient" : "Particulier"}]',
 2337
 );
 
@@ -369,9 +451,9 @@ VALUES
 26724, 
 505, 
 50, 
-'{"numeroCarteIdentite" : "456132584", "nom" : "Lafond", "prenom" : "Colin",
+'[{"numeroCarteIdentite" : "456132584", "nom" : "Lafond", "prenom" : "Colin",
 "dateNaissance" : "1994-03-12", "adresseMail" : "lfd.colin@lilo.org",
-"typeClient" : "Particulier"}', 
+"typeClient" : "Particulier"}]', 
 1287
 );
 
@@ -381,8 +463,8 @@ VALUES
 12354, 
 910, 
 40,  
-'{"numeroCarteIdentite" : "753715738", "nom" : "Bond", "prenom" : "James", "dateNaissance" : "1998-06-10", "adresseMail" : "bond.007@lilo.org", 
-"typeClient" : "Professionnel"}',
+'[{"numeroCarteIdentite" : "753715738", "nom" : "Bond", "prenom" : "James", "dateNaissance" : "1998-06-10", "adresseMail" : "bond.007@lilo.org", 
+"typeClient" : "Professionnel"}]',
 2347
 ); 
  
@@ -391,9 +473,9 @@ VALUES
 (19875, 
 590, 
 40, 
-'{"numeroCarteIdentite" : "537537683", "nom" : "Taylor", "prenom" : "Vanessa",
+'[{"numeroCarteIdentite" : "537537683", "nom" : "Taylor", "prenom" : "Vanessa",
 "dateNaissance" : "1998-05-03", "adresseMail" : "vanessa.taylor@lilo.org",
-"typeClient" : "Professionnel"}', 
+"typeClient" : "Professionnel"}]', 
 2347
 );
 
@@ -403,8 +485,8 @@ VALUES
 54324, 
 590, 
 0, 
-'{"numeroCarteIdentite" : "456789938", "nom" : "Brasseur", "prenom" : "Solene",
-"dateNaissance" : "1995-06-10", "adresseMail" : "brasseur.sln@lilo.org", "typeClient" : "Particulier"}', 
+'[{"numeroCarteIdentite" : "456789938", "nom" : "Brasseur", "prenom" : "Solene",
+"dateNaissance" : "1995-06-10", "adresseMail" : "brasseur.sln@lilo.org", "typeClient" : "Particulier"}]', 
 2347
 );
 
@@ -415,9 +497,9 @@ VALUES
 (
 98479, 
 90, 
-'{"numeroCarteIdentite" : "537537683", "nom" : "Taylor", "prenom" : "Vanessa",
+'[{"numeroCarteIdentite" : "537537683", "nom" : "Taylor", "prenom" : "Vanessa",
 "dateNaissance" : "1998-05-03", "adresseMail" : "vanessa.taylor@lilo.org",
-"typeClient" : "Professionnel"}',
+"typeClient" : "Professionnel"}]',
  2231
 );
 
@@ -426,9 +508,9 @@ VALUES
 (
 65283, 
 89, 
-'{"numeroCarteIdentite" : "467846776", "nom" : "Bass", "prenom" : "Chuck",
+'[{"numeroCarteIdentite" : "467846776", "nom" : "Bass", "prenom" : "Chuck",
 "dateNaissance" : "1991-05-03", "adresseMail" : "chuck.bass@lilo.org",
-"typeClient" : "Professionnel"}', 
+"typeClient" : "Professionnel"}]', 
 2347
 );
 
@@ -437,9 +519,9 @@ VALUES
 (
 32415, 
 0, 
-'{"numeroCarteIdentite" : "245367283", "nom" : "Idrissi", "prenom" : "Rayane",
+'[{"numeroCarteIdentite" : "245367283", "nom" : "Idrissi", "prenom" : "Rayane",
 "dateNaissance" : "2008-06-10", "adresseMail" : "idrissi.rayane@lilo.org",
-"typeClient" : "Particulier"}', 
+"typeClient" : "Particulier"}]', 
 1287
 );
 
@@ -487,3 +569,5 @@ INSERT INTO Reprise VALUES
 (67892, 'Remise de 50% à appliquer en caisse', 736, 65283);
 
  */
+
+
