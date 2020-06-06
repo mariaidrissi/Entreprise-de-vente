@@ -141,7 +141,20 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - C'est le service vente qui emmet les bons de commandes
 - C'est le service achat qui valide un achat suite au bon de commande avec une quantité de produits et le prix unitaire final
 - C'est le service après vente qui crée le ticket de prise en charge, et qui décide si un produit est réparable, ou si le produit sera repris en proposant une remise au client ou si le produit lui sera rendu
-- Pouvoir retrouver différentes statistiques, comme par exemple les produits les plus vendus, ceux qui ont le plus de pannes, le panier moyen, le total des remises effectuées par un vendeur, etc
+- Pouvoir retrouver différentes statistiques
+- On peut connaitre le montant du panier moyen
+- On peut connaitre le total des remises effectué par chaque personnel vente
+- On peut connaitre les produits les plus vendus
+- On peut connaitre les produits qui ont eu le plus de réparation
+- On peut connaitre LE produit le plus vendu
+- On peut connaitre LE produit qui a été le plus réparé
+- On peut connaitre le nombre de facture par personnel
+- On peut connaitre LE personnel qui a emis le plus de facture
+- On peut consulter tous les cliens qui ont deja payés une facture
+- On peut connaitre combien de facture a payé chaque client
+- On peut connaitre le client le plus fidèle, c'est à dire celui qui a payé le plus de facture
+- On peut consulter l'ensemble des personnels
+- On peut consulter le total final pour chaque facture
 
 ## Hypothèses faites pour la modélisation
 - L'entreprise vend des produits de différentes marques 
