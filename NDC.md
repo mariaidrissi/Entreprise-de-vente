@@ -135,6 +135,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - Membre du SAV 
 - Membre du service vente
 - Membre du service achat
+- Membre du service Reparation
 
 ## Liste des fonctions que ces utilisateurs pourront effectuer
 - C'est le service vente qui réalise les factures
@@ -155,6 +156,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - On peut connaitre le client le plus fidèle, c'est à dire celui qui a payé le plus de facture
 - On peut consulter l'ensemble des personnels
 - On peut consulter le total final pour chaque facture
+- On peut consulter les produits invendus
 
 ## Hypothèses faites pour la modélisation
 - L'entreprise vend des produits de différentes marques 
