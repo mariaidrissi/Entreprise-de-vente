@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS
 Produit, ProduitCompatibleProduit, Marque,
 OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, 
 PersonnelAchat, PersonnelVente, PersonnelSAV,PersonnelReparation, 
-TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente, ExpositionTemporaire
+TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente
 CASCADE
 ;
 
@@ -128,7 +128,7 @@ CREATE TABLE BonDeCommande(
 );
 
 
--- Views 
+-- Creation View
 
 CREATE VIEW vueticketPriseEncharge(nbTicket) AS
 SELECT COUNT(*)
@@ -184,21 +184,21 @@ SELECT referenceProduit, nombreDeVente
 FROM vueProduitLesPlusVendus 
 WHERE RANG=1;
 
-CREATE VIEW vueProduitsLesPlusDeRepares(referenceProduit, nombreDePanne) AS
+CREATE VIEW vueProduitsLesPlusRepares(referenceProduit, nombreDePanne) AS
 SELECT P.reference, COUNT(*) 
 FROM Reparation R, FactureOccurenceProduit FOP, OccurenceProduit OP, Produit P
 WHERE R.facture=FOP.Facture AND FOP.Produit=OP.numeroDeSerie AND OP.referenceProduit=P.reference
 GROUP BY P.reference;
 
 CREATE VIEW vuePireProduit(referenceProduitLePlusRepare, nombreDeReparation) AS
-WITH vueProduitsLesPlusDeRepares 
+WITH vueProduitsLesPlusRepares 
 AS
 (
 SELECT *, RANK ( ) OVER (ORDER BY nombreDePanne DESC) AS RANG
-FROM vueProduitsLesPlusDeRepares
+FROM vueProduitsLesPlusRepares
 )
 SELECT referenceProduit, nombreDePanne
-FROM vueProduitsLesPlusDeRepares 
+FROM vueProduitsLesPlusRepares 
 WHERE RANG=1;
 
 CREATE VIEW vueTOPPersonnelVente(idPersonnel, nomPersonnel, nombreDeFacture) AS
@@ -239,6 +239,66 @@ FROM vueClientFacture
 SELECT nomClient, prenomClient, nombreFacture 
 FROM vueClientFacture 
 WHERE RANG=1;
+
+CREATE VIEW vueProduitsInvendus(referenceProduit)AS
+SELECT DISTINCT P.reference 
+FROM Vente V, FactureOccurenceProduit FOP, OccurenceProduit OP, Produit P
+WHERE P.reference NOT IN (
+SELECT P.reference 
+FROM Vente V, FactureOccurenceProduit FOP, OccurenceProduit OP, Produit P
+WHERE V.facture=FOP.Facture AND FOP.Produit=OP.numeroDeSerie AND OP.referenceProduit=P.reference);
+
+/*
+-- Create User
+
+CREATE ROLE PersonnelAchat;
+CREATE ROLE PersonnelVente;
+CREATE ROLE PersonnelReparation;
+CREATE ROLE PersonnelSAV;
+
+-- Tout le monde peut accéder à l’ensemble des produits, et des marques
+
+GRANT SELECT
+ON Produit, Marque
+TO PUBLIC;
+
+-- Tous les personnels peuvent accéder à l’ensemble des données et statistiques de l’entreprise
+
+GRANT SELECT
+ON Produit, ProduitCompatibleProduit, Marque,
+OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, 
+PersonnelAchat, PersonnelVente, PersonnelSAV,PersonnelReparation, 
+TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente, vueticketPriseEncharge, vueFacture, vueFactureOccurenceProduit, vuePersonnel, vueTotalFinal, vueTotalPanierMoyen, vueTotalRemiseParVendeur, vueProduitLesPlusVendus, vueBestSeller, vueProduitsLesPlusRepares, vuePireProduit, vueTOPPersonnelVente, vueMeilleurPersonnelVente, vueClient, vueClientFacture, vueClientLePlusFidele, vueProduitsInvendus
+TO PersonnelAchat, PersonnelVente, PersonnelReparation, PersonnelSAV;
+
+-- Tous les personnels peuvent insérer et modifier les tables des personnels, des marques, des fournisseurs et des produits
+
+GRANT INSERT, UPDATE
+ON PersonnelAchat, PersonnelVente, PersonnelReparation, PersonnelSAV, Marque, Fournisseur, Produit
+TO PersonnelAchat, PersonnelVente, PersonnelReparation, PersonnelSAV;
+
+-- C’est le personnel vente qui crée les bons de commande et qui émet les factures
+
+GRANT INSERT, UPDATE, DELETE ON BonDeCommande, Facture, FactureOccurenceProduit TO PersonnelVente;
+
+-- C’est le personnel achat qui valide les bons de commande avec une quantité de produits et le prix unitaire final
+
+GRANT UPDATE ON BonDeCommande TO PersonnelAchat;
+
+-- C’est le personnel SAV qui émet les ticketsPriseEnCharge, et qui décide si le produit sera réparé, repris ou vendu
+
+GRANT INSERT, UPDATE, DELETE
+ON TicketPriseEnCharge, Reparation, Reprise
+TO PersonnelSAV;
+
+-- C’est le personnel Reparation qui effectue les reparations et qui les modifie
+
+GRANT INSERT, UPDATE, DELETE
+ON Reparation
+TO PersonnelReparation;
+
+*/
+
 
 -- Insertions
 
@@ -569,5 +629,3 @@ INSERT INTO Reprise VALUES
 (67892, 'Remise de 50% à appliquer en caisse', 736, 65283);
 
  */
-
-
