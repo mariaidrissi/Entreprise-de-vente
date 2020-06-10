@@ -11,7 +11,14 @@ class Produit {
   consommation[0..1]: integer
 }
 
+Description "1" --* Produit
 
+class Description {
+  poids : float
+  couleur : string
+  electrique : boolean
+  fonctionnalité : string
+}
 Produit "0..*" --  "0..*" Produit : compatible avec
 
 Marque "1" -- "*" Produit : fabrique >
