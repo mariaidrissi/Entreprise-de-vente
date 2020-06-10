@@ -26,7 +26,6 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 * Réparation
 * Vente
 * Reprise 
-* Client
 
 
 ## Liste des propriétés associées à chaque objet
@@ -82,6 +81,7 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 - réalisée par un Personnel du service vente
 - possède un total sans remise
 - possède un numéro de facture
+- possède un client sous forme d'un JSON avec un nom, prenom, date de naissance adresseMail et typeClient (soit un particulier soit un professionel)
 - peut possèder un supplément si l'installation nécessite un spécialiste, par default le supplement=0
 - peut possèder une remise à appliquer sur le total sans remise, par default la remise=0
 - possède une methode total final pour calculer le total avec remise et supplément si il y a 
@@ -108,10 +108,6 @@ L'objectif de ce projet est de créer une nouvelle base de données pour une pet
 **Reprise d'objet**
 - possède une contre partie 
 
-**Client**
-- possède un nom, prenom, et date de naissance (les trois constituent une clé)
-- possède une adresseMail
-- typeClient (soit un particulier soit un professionel)
 
 ## Liste des contraintes associées à ces objets et propriétés
 
