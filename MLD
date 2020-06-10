@@ -1,8 +1,12 @@
-Produit(#reference : varchar, prixReference : float, description : varchar, extensionGarantie : boolean, consommation : integer, marque=>Marque, sousCategorie : JSON) avec prixReference NOT NULL, prixReference>0, description NOT NULL, marque NOT NULL, sousCategorie NOT NULL, extensionGarantie NOT NULL
+Produit(#reference : varchar, prixReference : float, description : JSON, extensionGarantie : boolean, consommation : integer, marque=>Marque, #sousCategorie=>SousCategorie, #categorie=>Categorie) avec prixReference NOT NULL, prixReference>0, description NOT NULL, marque NOT NULL, sousCategorie NOT NULL, Categorie NOT NULL, extensionGarantie NOT NULL
 
 ProduitCompatibleProduit(#Produit1=>Produit, #Produit2=>Produit)
 
 Marque(#nom : varchar)
+
+Categorie(#nom : varchar) 
+
+SousCategorie(#nom : varchar, #categorie=>Categorie)
 
 OccurenceProduit(#numeroDeSerie : integer, prixAffiche : float, referenceProduit=>Produit, fournisseur=>Fournisseur) avec prixAffiche NOT NULL, prixAffiche>0, referenceProduit NOT NULL, fournisseur NOT NULL
 
