@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS
-Produit, ProduitCompatibleProduit, Marque,
+Produit, ProduitCompatibleProduit, Marque, Categorie, SousCategorie,
 OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, 
 PersonnelAchat, PersonnelVente, PersonnelSAV,PersonnelReparation, 
 TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente
@@ -12,14 +12,28 @@ CREATE TABLE Marque(
  nom VARCHAR PRIMARY KEY
 );
 
+CREATE TABLE Categorie(
+ nom VARCHAR PRIMARY KEY
+);
+
+CREATE TABLE SousCategorie(
+ nom VARCHAR,
+ categorie VARCHAR,
+ PRIMARY KEY (nom, categorie),
+ FOREIGN KEY (categorie) REFERENCES Categorie(nom)
+);
+
+
 CREATE TABLE Produit(
   reference VARCHAR PRIMARY KEY,
   prixReference FLOAT NOT NULL,
-  description VARCHAR NOT NULL,
+  description JSON NOT NULL,
   extensionGarantie BOOLEAN NOT NULL,
   consommation INTEGER, 
   marque VARCHAR REFERENCES Marque(nom) NOT NULL,
-  sousCategorie JSON NOT NULL, 
+  sousCategorie VARCHAR,
+  categorie VARCHAR,
+  FOREIGN KEY (sousCategorie, categorie) REFERENCES SousCategorie (nom, categorie),
   CHECK (prixReference >0)
 );
 
@@ -256,16 +270,16 @@ CREATE ROLE PersonnelVente;
 CREATE ROLE PersonnelReparation;
 CREATE ROLE PersonnelSAV;
 
--- Tout le monde peut accéder à l’ensemble des produits, et des marques
+-- Tout le monde peut accéder à l’ensemble des produits, des categories, sous categorie et des marques
 
 GRANT SELECT
-ON Produit, Marque
+ON Produit, Marque, Categorie, SousCategorie
 TO PUBLIC;
 
 -- Tous les personnels peuvent accéder à l’ensemble des données et statistiques de l’entreprise
 
 GRANT SELECT
-ON Produit, ProduitCompatibleProduit, Marque,
+ON Produit, ProduitCompatibleProduit, Marque, Categorie, SousCategorie,
 OccurenceProduit, Facture, FactureOccurenceProduit,Fournisseur, 
 PersonnelAchat, PersonnelVente, PersonnelSAV,PersonnelReparation, 
 TicketPriseEnCharge, BonDeCommande, Reparation, Reprise, Vente, vueticketPriseEncharge, vueFacture, vueFactureOccurenceProduit, vuePersonnel, vueTotalFinal, vueTotalPanierMoyen, vueTotalRemiseParVendeur, vueProduitLesPlusVendus, vueBestSeller, vueProduitsLesPlusRepares, vuePireProduit, vueTOPPersonnelVente, vueMeilleurPersonnelVente, vueClient, vueClientFacture, vueClientLePlusFidele, vueProduitsInvendus
@@ -311,6 +325,28 @@ INSERT INTO Marque VALUES
 ('Bosch'), 
 ('Brico');
 
+INSERT INTO Categorie VALUES
+('Cuisine'),
+('Chambre'),
+('Jardin'),
+('Informatique'),
+('Electromenager');
+
+INSERT INTO SousCategorie VALUES
+('Petit Electromenager', 'Cuisine'),
+('Ustensile', 'Cuisine'),
+('Gros Electromenager', 'Cuisine'),
+('Literie', 'Chambre'),
+('Lampes', 'Chambre'),
+('Bricolage', 'Jardin'),
+('Jardinage', 'Jardin'),
+('Ordinateur', 'Informatique'),
+('Telephone', 'Informatique'),
+('Television', 'Informatique'),
+('Cuisson', 'Electromenager'),
+('Aspirateur et nettoyeur', 'Electromenager');
+
+INSERT INTO SousCategorie VALUES ('Bricolage', 'Informatique');
 
 INSERT INTO Fournisseur VALUES
 ('GeneralElectromenager'),
@@ -319,100 +355,99 @@ INSERT INTO Fournisseur VALUES
 ('Telephonie'),
 ('Saphir');
 
+
 INSERT INTO Produit 
-VALUES 
-(
-'Lave linge WD 80 K 5 B 10',
+VALUES (
+'Lave linge WD 80 K 5 B 10', 
 600, 
-'Lave linge et secheur frontal', 
+'[{"poids":60,"couleur":"blanc", "electrique":"true", "fonctionnalité":"Lave et séche"}]', 
 'true', 
-8,	
+8,
 'Samsung', 
-'{"categorie":"Electromenager","sousCategorie":"Aspirateur et nettoyeur"}'
+'Aspirateur et nettoyeur', 
+'Electromenager'
 );
 
 INSERT INTO Produit 
-VALUES 
-(
+VALUES(
 'Four encastrable pyrolyse HB675G0S1F iQ700', 
-400, 
-'Four haute intensité', 
+400,
+'[{"poids":30,"couleur":"noir", "electrique":"true", "fonctionnalité":"Micro onde et four"}]', 
 'true', 
 10, 
 'Bosch', 
-'{"categorie":"Electromenager","sousCategorie" : "Cuisson"}'
+'Cuisson', 
+'Electromenager'
 );
 
 INSERT INTO Produit 
-VALUES 
-(
+VALUES(
 'Plaque induction PUJ631BB1E', 
 500, 
-'4 plaques inductions', 
+'[{"poids":15,"couleur":"noir", "electrique":"true", "fonctionnalité":"haute intensité"}]', 
 'false', 
 9, 
-'Bosch',  
-'{"categorie":"Electromenager","sousCategorie" : "Cuisson"}'
-);
+'Bosch', 
+'Cuisson', 
+'Electromenager');
 
 INSERT INTO Produit 
-VALUES 
-(
+VALUES(
 'Television 27 DH YT', 
 290, 
-'Ecran plat Full HD 4K', 
+'[{"poids":15,"couleur":"noir", "electrique":"true", "fonctionnalité":"4 K FULL HD"}]', 
 'true', 
 4, 
-'LG',  
-'{"categorie":"Informatique","sousCategorie" : "Television"}'
-);
+'LG', 
+'Television',
+'Informatique'); 
 
 INSERT INTO Produit 
-VALUES 
-(
-'Boite à outils 34 ER 78', 
-150, 
-'Tres pratique pour vous depanner en cas de soucis informatique', 
-'true', 
-0, 
-'Brico',  
-'{"categorie":"Informatique","sousCategorie" : "Bricolage"}'
-);
-
-INSERT INTO Produit 
-VALUES 
-(
-'Secateur 56 HT 76', 
-60, 
-'Secateur indispensable pour votre bricolage dans votre jardin', 
-'true', 
-0, 
-'Brico', 
-'{"categorie": "Jardin", "sousCategorie" : "Bricolage"}'
-);
-
-INSERT INTO Produit 
-VALUES 
-(
-'Tondeuse 74 HG TH', 
-150, 
-'Tondeuse simple à utiliser', 
-'true', 
-6, 
-'Bosch', 
-'{"categorie": "Jardin", "sousCategorie" : "Jardinage"}'
-);
-
-INSERT INTO Produit 
-VALUES 
-(
-'Frigo AJ 64 87', 
-900, 
-'Frigo avec compartiment congélateur', 
+VALUES(
+'Frigo AJ 64 87', 900, 
+'[{"poids":100,"couleur":"gris", "electrique":"true", "fonctionnalité":"frigo et compartiment congelo"}]', 
 'true', 
 13, 
 'Bosch', 
-'{"categorie": "Cuisine", "sousCategorie" : "Gros Electromenager"}'
+'Gros Electromenager', 
+'Cuisine'
+); 
+
+INSERT INTO Produit 
+VALUES(
+'Tondeuse 74 HG TH', 
+150, 
+'[{"poids":9,"couleur":"vert", "electrique":"true", "fonctionnalité":"3 boutons facile à utiliser"}]', 
+'true', 
+6, 
+'Bosch', 
+'Jardinage', 
+'Jardin'
+);
+
+
+INSERT INTO Produit 
+VALUES(
+'Secateur 56 HT 76', 
+60, 
+'[{"poids":2,"couleur":"rouge", "electrique":"false"}]',
+'true', 
+0, 
+'Brico', 
+'Bricolage', 
+'Jardin'
+);
+
+INSERT INTO Produit 
+VALUES(
+'Boite à outils 34 ER 78', 
+150, 
+'[{"poids":20,"couleur":"marron", "electrique":"false", "fonctionnalité":"facile à utiliser pour soucis informatique"}]', 
+'true', 
+0, 
+'Brico', 
+'Bricolage', 
+'Informatique'
 );
 
 
