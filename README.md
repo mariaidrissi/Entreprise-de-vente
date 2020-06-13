@@ -57,6 +57,6 @@ Livrable 2 : NDC, MCD, MLD, SQL CREATE et INSERT ─ dimanche 31 mai 23h59
 
 Livrable 3 : NDC, MCD, MLD, SQL CREATE et INSERT, SQL SELECT, Complément : PostgreSQL/JSON ─ dimanche 07 juin 23h59
 
-Livrable 4 : Révision complète du projet (v2) ─ dimanche 14 juin 23h59
+Livrable 4 : Révision complète du projet (v2) ─ Application CLI Python (On considère que c'est un admin qui execute le fichier menu.py)- dimanche 14 juin 23h59
 
 Livrable 5 : Révision complète du projet (v3) ─ dimanche 21 juin 23h59
