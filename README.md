@@ -57,6 +57,17 @@ Livrable 2 : NDC, MCD, MLD, SQL CREATE et INSERT ─ dimanche 31 mai 23h59
 
 Livrable 3 : NDC, MCD, MLD, SQL CREATE et INSERT, SQL SELECT, Complément : PostgreSQL/JSON ─ dimanche 07 juin 23h59
 
-Livrable 4 : Révision complète du projet (v2) ─ Application CLI Python (On considère que c'est un admin qui execute le fichier menu.py)- dimanche 14 juin 23h59
+Livrable 4 : Révision complète du projet (v2) ─ Application CLI Python - dimanche 14 juin 23h59
 
 Livrable 5 : Révision complète du projet (v3) ─ dimanche 21 juin 23h59
+
+### Application CLI PYTHON
+
+Pour executér le fichier menu.py, il faut tout d'abbord installer le package click avec la commande $ pip3 install -U click 
+
+On considère que c'est un admin qui execute le fichier menu.py, les droits ne sont pas encore géré, donc la personne qui a accès à l'application est un admin 
+
+Sur le fichier ScenarioEssai.md, on peut retrouver un scenario d'utilisation, avec le menu, on affiche tout d'abbord toutes les tables, une à la suite de l'autre, puis on insère des produits, categorie, sousCategorie, marque, fournisseur et occurenceProduit, puis on verifie que les élements ont bien été ajouté aux tables en réaffichant les tables. Puis on affiche les statistiques en affichant les vues. 
+
+
+
